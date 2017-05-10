@@ -28,7 +28,6 @@ hs_err_pid*
 # IntelliJ project files
 out/
 gen
-.idea/
 cards-browser/.gradle/
 cards-browser/build/
 documentatio/

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../untitled/.idea/modules/cards-browser.iml" filepath="$PROJECT_DIR$/../untitled/.idea/modules/cards-browser.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/cards-browser_main.iml" filepath="$PROJECT_DIR$/.idea/modules/cards-browser_main.iml" group="cards-browser" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/cards-browser_test.iml" filepath="$PROJECT_DIR$/.idea/modules/cards-browser_test.iml" group="cards-browser" />
+      <module fileurl="file://$PROJECT_DIR$/documentation/documentation.iml" filepath="$PROJECT_DIR$/documentation/documentation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/html/html.iml" filepath="$PROJECT_DIR$/html/html.iml" />
+    </modules>
+  </component>
+</project>
