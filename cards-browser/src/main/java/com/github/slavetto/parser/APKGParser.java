@@ -1,6 +1,8 @@
 package com.github.slavetto.parser;
 
 import com.github.slavetto.parser.exceptions.AnkiDatabaseNotFoundException;
+import com.github.slavetto.parser.models.CardModels;
+import com.github.slavetto.parser.models.DeckInfos;
 import com.google.common.io.Files;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
@@ -9,7 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
-/**
+/*
  * Created with ♥
  */
 public class APKGParser {
@@ -20,8 +22,10 @@ public class APKGParser {
      * The folder where the contents of the *.apkg file were unzipped. It's null if nothing has been unzipped.
      */
     private File unzippedToFolder = null;
-
     private AnkiDatabase database = null;
+
+    private CardModels cardModels;
+    private DeckInfos deckInfos;
 
     public APKGParser(File apgkFilePath) {
         this.apgkFilePath = apgkFilePath;
@@ -39,16 +43,14 @@ public class APKGParser {
     /**
      * Creates a new connection to the database. Can be called only when the anki file is unzipped.
      */
-    private void initDeckDatabaseIfNeeded() throws AnkiDatabaseNotFoundException, SQLException {
-        if (database == null) {
-            database = new AnkiDatabase(calculateDatabaseFile());
-        }
+    private void initDeckDatabase() throws AnkiDatabaseNotFoundException, SQLException {
+        database = new AnkiDatabase(calculateDatabaseFile());
     }
 
     /**
      *
      * @return the file that points to the database file
-     * @throws AnkiDatabaseNotFoundException
+     * @throws AnkiDatabaseNotFoundException if the anki database was not found (probably invalid zip file)
      */
     private File calculateDatabaseFile() throws AnkiDatabaseNotFoundException {
         if (unzippedToFolder == null) {
@@ -68,14 +70,12 @@ public class APKGParser {
      * Unzips the .dpkg if it's not already unzipped.
      * @throws ZipException if an error happens when unzipping
      */
-    private void unzipIfNeeded() throws ZipException {
-        if (unzippedToFolder == null) {
-            File tempDir = Files.createTempDir();
-            ZipFile zipFile = new ZipFile(apgkFilePath);
-            zipFile.extractAll(tempDir.getAbsolutePath());
+    private void unzip() throws ZipException {
+        File tempDir = Files.createTempDir();
+        ZipFile zipFile = new ZipFile(apgkFilePath);
+        zipFile.extractAll(tempDir.getAbsolutePath());
 
-            unzippedToFolder = tempDir;
-        }
+        unzippedToFolder = tempDir;
     }
 
     /**
@@ -83,8 +83,20 @@ public class APKGParser {
      * establishing a connection to the database and reading the media file.
      */
     public void tryOpenFile() throws ZipException, SQLException, AnkiDatabaseNotFoundException {
-        unzipIfNeeded();
-        initDeckDatabaseIfNeeded();
+        unzip();
+        initDeckDatabase();
+        fetchDecksInfos();
+        fetchCardModels();
+    }
+
+    private void fetchDecksInfos() throws SQLException {
+        deckInfos = new DeckInfos();
+        deckInfos.addFromJson(database.fetchDecksInfos());
+    }
+
+    private void fetchCardModels() throws SQLException {
+        cardModels = new CardModels();
+        cardModels.addFromJson(database.fetchCardModelsJson());
     }
 
     /**
@@ -94,7 +106,7 @@ public class APKGParser {
         //TODO:
     }
 
-    public int getNumCards() throws SQLException {
-        return database.getNumCards();
+    public long getNumCardsInAllDecks() throws SQLException {
+        return database.getNumCardsInAllDecks();
     }
 }

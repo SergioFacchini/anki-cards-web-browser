@@ -1,10 +1,10 @@
 package com.github.slavetto.parser.exceptions;
 
-/**
+/*
  * Created with ♥
  */
 public class APKGFileException extends Exception {
-    public APKGFileException() {
+    APKGFileException() {
     }
 
     public APKGFileException(String message) {

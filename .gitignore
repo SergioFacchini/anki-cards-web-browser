@@ -29,5 +29,8 @@ hs_err_pid*
 out/
 .idea/dictionaries
 .idea/libraries
+.idea/workspace.xml
 examples/
 lib/
+cards-browser/.gradle/
+cards-browser/build/

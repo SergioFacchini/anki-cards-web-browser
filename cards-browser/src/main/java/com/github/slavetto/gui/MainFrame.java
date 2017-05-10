@@ -50,7 +50,7 @@ public class MainFrame extends JFrame {
         //Self listeners
         onValidParserSelected.connect(() -> { //Decks counter
             try {
-                int numCards = currentParser.getNumCards();
+                long numCards = currentParser.getNumCardsInAllDecks();
                 apkgSelectedStatus.setText(numCards+" cards found");
             } catch(SQLException exception) {
                 apkgSelectedStatus.setText("Error while retrieving cards");
