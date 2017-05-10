@@ -18,7 +18,7 @@ generate the viewer.
 
 ### Fetching notes
 The notes are stored in the `notes` table. The columns that we need from that table are:
-* `id`: The unique identifier of the card
+* `id`: The unique identifier of the note
 * `mid`: The ID of the cards model (described later how to get it)
 * `fld`: The fields of the note. This needs to be feed into the cards model to generate the cards.
          It contains all the fields, separated by the `0x1f` (31) character. The order of the fields 
@@ -168,6 +168,8 @@ structure of the cards. Models that define multiple templates generate multiple 
 each template. This object has two important fields:
 * `"qfmt"`: The HTML of the front of the card
 * `"afmt"`: The HTML of the rear of the card
+* `"ord"`: The position of the template in the `"tmpls"` array. This is used by the `cards` table to
+identify the template that generated the card.
 
 These fields can contain `{{placeholders}}` that have to be substituted with the 
 values of the fields that the cards store in `notes.fld`. The association between field position 
@@ -239,9 +241,17 @@ JSON format. Here is a sample JSON:
 }
 ```
 Some fields that should be noted:
-* `id`: Unique id of the deck
+* `id`: Unique id of the deck. The id is used in the `cards` table, in the `did` column to specify 
+the associations between cards and decks (explained later).
 * `name`: The name of the deck. In case of child decks, the name will be in the format "Parent deck name::Child deck name"
 
+### Fetching cards
+The information about cards are stored in the `cards` table. The columns that we need from that table are:
+                                                             
+* `id`: unique identifier of the card
+* `nid`: id of the note that generated this card
+* `did`: id identifier of the deck where this card is contained
+* `ord`: the position of the template of the model; it matches the template's `ord` field.
 
 ### The structure of `media` file
 `media` is a JSON file that associates the code-names of the images to its' original names. Note 
