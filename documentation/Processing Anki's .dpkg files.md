@@ -24,7 +24,7 @@ The notes are stored in the `notes` table. The columns that we need from that ta
          It contains all the fields, separated by the `0x1f` (31) character. The order of the fields 
          is exactly the one presented in the note's model.
 
-### Fetching cards model
+### Fetching cards models
 In order to be able to generate the cards from the notes, we need to fetch the cards model. The model tells us how many 
 cards have to be generated from a single note, what's the HTML surrounding the note, how the fields of `notes.fld` have 
 to be presented.
@@ -177,3 +177,25 @@ without having to copy & paste the contents of `"qfmt"` while creating cards mod
 
 The last field of our interest is `"css"`; it contains the CSS code that have to be applied to the 
 card.
+
+### The structure of `media` file
+`media` is a JSON file that associates the code-names of the images to its' original names. Note 
+that any card's field can contain images, but the images are linked with their complete name. 
+During the creation of the .apkg file anki compresses the names of the images (actually it just 
+renames these with progressive numbers), however the cards still keep referring to the original
+name. The purpose of the `media` file it make us capable to translate numeric names in the 
+images's original names.
+
+The structure of `media` is pretty straight-forward:
+ 
+```
+{
+    "2": "paste-61641370632193.jpg", 
+    "3": "paste-81522774245377.jpg", 
+    "1": "latex-0cc8b5131ccb25b20258394ebcf13773bb8b2d19.png", 
+    "4": "paste-13327283519489.jpg"
+}
+```
+
+Where the keys are the names of the compressed files and the string values are the original
+names.
