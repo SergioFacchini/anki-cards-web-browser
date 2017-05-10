@@ -20,6 +20,7 @@ generate the viewer.
 The notes are stored in the `notes` table. The columns that we need from that table are:
 * `id`: The unique identifier of the note
 * `mid`: The ID of the cards model (described later how to get it)
+* `tags`: The tags associated to the note
 * `fld`: The fields of the note. This needs to be feed into the cards model to generate the cards.
          It contains all the fields, separated by the `0x1f` (31) character. The order of the fields 
          is exactly the one presented in the note's model.
@@ -242,7 +243,7 @@ JSON format. Here is a sample JSON:
 ```
 Some fields that should be noted:
 * `id`: Unique id of the deck. The id is used in the `cards` table, in the `did` column to specify 
-the associations between cards and decks (explained later).
+the associations between cards and decks (explained later). Note that the default deck has always id `1`.
 * `name`: The name of the deck. In case of child decks, the name will be in the format "Parent deck name::Child deck name"
 
 ### Fetching cards

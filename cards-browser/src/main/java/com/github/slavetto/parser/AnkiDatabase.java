@@ -40,7 +40,7 @@ class AnkiDatabase {
     }
 
     long getNumCardsInAllDecks() throws SQLException {
-        return notesDAO.countOf();
+        return cardsDAO.countOf();
     }
 
     /**
@@ -62,5 +62,16 @@ class AnkiDatabase {
      */
     String fetchDecksInfos() throws SQLException {
         return fetchDbConfigRow().getDecksJsonStr();
+    }
+
+    /**
+     * @param deckId the id of the deck
+     * @return how many cards there are in the deck having the given id
+     */
+    long getNumCardsInDeck(long deckId) throws SQLException {
+        return cardsDAO.queryBuilder()
+                .where()
+                .eq("did", deckId)
+                .countOf();
     }
 }
