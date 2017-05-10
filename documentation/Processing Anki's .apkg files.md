@@ -1,10 +1,10 @@
-# Processing Anki's .dpkg files
+# Processing Anki's .apkg files
 ## What is this?
-This document explains how the processing of the dpkg archives should work.
+This document explains how the processing of the apkg archives should work.
 
-## Structure of .dpkg files
+## Structure of .apkg files
 
-The Anki .dpkg files are just zip archives containing the following files:
+The Anki .apkg files are just zip archives containing the following files:
 * `collection.anki2`: An sqlite database containing cards, notes, notes models, etc...
 * Files named `1`,`2`,`3`,`4`...: The images that the cards use 
 * `media`: A json file containing mappings between images and it's original names (eg: file `1` is actually called `latex-96c15f8a1af25e7a2eec64f7c6fedafe12363352.png` in the cards).
