@@ -24,7 +24,7 @@
             <properties/>
             <border type="etched" title="1 - Select an *.apkg file"/>
             <children>
-              <component id="a758f" class="javax.swing.JTextField" binding="textField1" default-binding="true">
+              <component id="a758f" class="javax.swing.JTextField" binding="apkgFilePathText">
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="-1"/>
@@ -32,6 +32,7 @@
                 </constraints>
                 <properties>
                   <editable value="false"/>
+                  <horizontalAlignment value="4"/>
                 </properties>
               </component>
               <component id="b92d7" class="javax.swing.JButton" binding="browseForApkgFileBtn">
@@ -42,7 +43,7 @@
                   <text value="Browse..."/>
                 </properties>
               </component>
-              <component id="fc3ba" class="javax.swing.JLabel">
+              <component id="fc3ba" class="javax.swing.JLabel" binding="apkgSelectedStatus">
                 <constraints>
                   <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
