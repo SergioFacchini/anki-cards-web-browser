@@ -109,4 +109,13 @@ public class APKGParser {
     public long getNumCardsInAllDecks() throws SQLException {
         return database.getNumCardsInAllDecks();
     }
+
+    public DeckInfos getDeckInfos() {
+        return deckInfos;
+    }
+
+    public long getNumCardsInDeck(long deckId) throws SQLException {
+        return database.getNumCardsInDeck(deckId);
+    }
+
 }

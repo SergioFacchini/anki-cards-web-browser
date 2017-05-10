@@ -26,6 +26,9 @@ public class DBNote {
     @DatabaseField(columnName = "mid", canBeNull = false)
     private String modelId;
 
+    @DatabaseField(columnName = "tags", canBeNull = false)
+    private String tags;
+
     public int getId() {
         return id;
     }
@@ -48,5 +51,13 @@ public class DBNote {
 
     public void setModelId(String modelId) {
         this.modelId = modelId;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
     }
 }
