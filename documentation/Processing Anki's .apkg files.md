@@ -178,6 +178,71 @@ without having to copy & paste the contents of `"qfmt"` while creating cards mod
 The last field of our interest is `"css"`; it contains the CSS code that have to be applied to the 
 card.
 
+### Fetching deck information
+The information about the decks contained in the archive is stored in the `col.decks` column in
+JSON format. Here is a sample JSON:
+ 
+```
+{
+  "1": {
+    "desc": "",
+    "name": "Predefinito",
+    "extendRev": 50,
+    "usn": 0,
+    "collapsed": false,
+    "newToday": [ 0, 0],
+    "timeToday": [ 0, 0],
+    "dyn": 0,
+    "extendNew": 10,
+    "conf": 1,
+    "revToday": [ 0, 0],
+    "lrnToday": [ 0, 0],
+    "id": 1,
+    "mod": 1494099120
+  },
+  "1493040141981": {
+    "extendRev": 50,
+    "collapsed": false,
+    "newToday": [ 262, 0],
+    "timeToday": [ 262, 158105],
+    "dyn": 0,
+    "extendNew": 10,
+    "conf": 1,
+    "revToday": [ 262, 11],
+    "lrnToday": [ 262, 0],
+    "id": 1493040141981,
+    "mod": 1494073733,
+    "name": "Universit\u00e0 - Calcolatori::Assembly",
+    "usn": 661,
+    "browserCollapsed": true,
+    "mid": 1471435194000,
+    "desc": ""
+  },
+  "1492955368330": {
+    "extendRev": 50,
+    "collapsed": false,
+    "newToday": [ 262, 30],
+    "timeToday": [ 262, 1384824],
+    "dyn": 0,
+    "extendNew": 10,
+    "conf": 1,
+    "revToday": [ 262, 25],
+    "lrnToday": [ 262, 14],
+    "id": 1492955368330,
+    "mod": 1494095504,
+    "name": "Universit\u00e0 - Calcolatori",
+    "usn": 671,
+    "browserCollapsed": true,
+    "mid": 1471435194000,
+    "desc": ""
+  }
+}
+```
+Some fields that should be noted:
+* `id`: Unique id of the deck
+* `name`: The name of the deck. In case of child decks, the name will be in the format "Parent deck name::Child deck name"
+
+
 ### The structure of `media` file
 `media` is a JSON file that associates the code-names of the images to its' original names. Note 
 that any card's field can contain images, but the images are linked with their complete name. 
