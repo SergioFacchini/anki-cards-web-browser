@@ -6,22 +6,23 @@ This document explains how the processing of the dpkg archives should work.
 
 The Anki .dpkg files are just zip archives containing the following files:
 * `collection.anki2`: An sqlite database containing cards, notes, notes models, etc...
-* Files named `1`,`2`,`3`,`4`...: The images that the cards of the archive use 
+* Files named `1`,`2`,`3`,`4`...: The images that the cards use 
 * `media`: A json file containing mappings between images and it's original names (eg: file `1` is actually called `latex-96c15f8a1af25e7a2eec64f7c6fedafe12363352.png` in the cards).
  
 ### The structure of `collection.anki2`
 This is the actual database that contains all the notes and other useful 
 information that we'll use to generate the viewer. There is a
  [very detailed guide about what exactly the database contains](https://github.com/ankidroid/Anki-Android/wiki/Database-Structure).
-In this document we'll just describe what we will need to pull off from the database in order to generate the viewer.
+In this document we'll just describe what we will need to pull off from the database in order to 
+generate the viewer.
 
 ### Fetching notes
 The notes are stored in the `notes` table. The columns that we need from that table are:
 * `id`: The unique identifier of the card
 * `mid`: The ID of the cards model (described later how to get it)
-* `fld`: The fields of the note. This needs to be feed into the cards model to generate the cards. It contains all the 
-         fields, separated by the `0x1f` (31) character. The order of the fields is exactly the one presented in the 
-         note's model.
+* `fld`: The fields of the note. This needs to be feed into the cards model to generate the cards.
+         It contains all the fields, separated by the `0x1f` (31) character. The order of the fields 
+         is exactly the one presented in the note's model.
 
 ### Fetching cards model
 In order to be able to generate the cards from the notes, we need to fetch the cards model. The model tells us how many 
@@ -150,6 +151,29 @@ record. The model is stored in a JSON format; this is an example of what a model
 ```
 
 In the [same URL mentioned before](https://github.com/ankidroid/Anki-Android/wiki/Database-Structure#models-jsonobjects)
-there is a very nice description of what each field of the model does. Here will be described only the ones we need to 
-create the cards browser.
+there is a very nice description of what each field of the model does. Here will be described only
+the ones we need to create the cards browser.
 
+In the root of the object, there is a `"1471435193999"` key. That key is the id of that model. 
+This is mentioned in the `mid` column of the `notes` table.
+
+Inside that object there is an array with key `"flds"`. This array contains the fields that
+the cards specify when creating notes. Usually there are just "Front" and "Rear" fields, however,
+depending on the model, it's possible to have more different fields. As mentioned before, the notes
+store this information in the `notes.fld` column; the fields of the column are in the same order of 
+the fields definitions in this array.
+
+The `"tmpls"` object contains templates of the notes and provides information about the HTML 
+structure of the cards. Models that define multiple templates generate multiple cards, one for 
+each template. This object has two important fields:
+* `"qfmt"`: The HTML of the front of the card
+* `"afmt"`: The HTML of the rear of the card
+
+These fields can contain `{{placeholders}}` that have to be substituted with the 
+values of the fields that the cards store in `notes.fld`. The association between field position 
+and field name is the one of the objects in `"flds"`. Note that `"afmt"` can contain a special 
+placeholder called `{{FrontSide}}`; this is just a handy way of showing the content of the card 
+without having to copy & paste the contents of `"qfmt"` while creating cards models.
+
+The last field of our interest is `"css"`; it contains the CSS code that have to be applied to the 
+card.
