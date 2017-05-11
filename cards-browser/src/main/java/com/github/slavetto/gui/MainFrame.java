@@ -10,9 +10,9 @@ import com.threerings.signals.Signal0;
 import net.lingala.zip4j.exception.ZipException;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -25,8 +25,8 @@ public class MainFrame extends JFrame {
     private JTextField apkgFilePathText;
     private JButton browseForApkgFileBtn;
     private JList<DeckWithCardNumber> whatDecksList;
-    private JTextField textField2;
-    private JButton browseButton;
+    private JTextField exportFolderText;
+    private JButton browseForDestinationFolder;
     private JList<DecksWithTags> whatCategoriesList;
     private JButton startBtn;
     private JCheckBox randomizeCardsPositionsCheckBox;
@@ -42,9 +42,14 @@ public class MainFrame extends JFrame {
      * The parser associated to the currently selected .apkg file. It's null until no file has been selected.
      */
     private APKGParser currentParser;
-    private JFileChooser fileChooser;
+
+    private JFileChooser apkgChooser;
+    private JFileChooser destinationFolderChooser;
 
     private final Signal0 onValidParserSelected = new Signal0();
+
+    //Exporting options
+    private File destinationFolder;
 
     private MainFrame() {
         setTitle("Anki Cards Web Browsers generator");
@@ -74,14 +79,23 @@ public class MainFrame extends JFrame {
             howManyCardsSelectedForExport.setText("Cards to export: "+numCardsToExport);
         });
 
-        //Chooser
-        fileChooser = new JFileChooser();
-        fileChooser.setFileFilter(new FileNameExtensionFilter("Anki archive (*.apkg)", "apkg"));
+        //Choosers
+        apkgChooser = new JFileChooser();
+        apkgChooser.setFileFilter(new FileNameExtensionFilter("Anki archive (*.apkg)", "apkg"));
+
+        destinationFolderChooser = new JFileChooser();
+        destinationFolderChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
         //Listeners
         browseForApkgFileBtn.addActionListener(e -> {
-            if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-                onAnkiFileSelected(fileChooser.getSelectedFile());
+            if (apkgChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+                onAnkiFileSelected(apkgChooser.getSelectedFile());
+            }
+        });
+
+        browseForDestinationFolder.addActionListener(e -> {
+            if (destinationFolderChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+                onDestinationFolderSelected(destinationFolderChooser.getSelectedFile());
             }
         });
 
@@ -95,6 +109,12 @@ public class MainFrame extends JFrame {
 
             isFirstSetupInProgress = false;
         });
+    }
+
+    private void onDestinationFolderSelected(File destinationFolder) {
+        this.destinationFolder = destinationFolder;
+
+        exportFolderText.setText(destinationFolder.getAbsolutePath());
     }
 
     private void fetchTagsOfSelectedDecks() {

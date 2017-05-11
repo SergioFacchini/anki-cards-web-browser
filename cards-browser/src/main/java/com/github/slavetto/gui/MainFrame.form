@@ -32,7 +32,7 @@
                 </constraints>
                 <properties>
                   <editable value="false"/>
-                  <horizontalAlignment value="4"/>
+                  <horizontalAlignment value="2"/>
                 </properties>
               </component>
               <component id="b92d7" class="javax.swing.JButton" binding="browseForApkgFileBtn">
@@ -97,15 +97,17 @@
         <properties/>
         <border type="etched" title="4 - In what folder the browser will be generated?"/>
         <children>
-          <component id="b101" class="javax.swing.JTextField" binding="textField2" default-binding="true">
+          <component id="b101" class="javax.swing.JTextField" binding="exportFolderText">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
               </grid>
             </constraints>
-            <properties/>
+            <properties>
+              <horizontalAlignment value="2"/>
+            </properties>
           </component>
-          <component id="a7538" class="javax.swing.JButton" binding="browseButton" default-binding="true">
+          <component id="a7538" class="javax.swing.JButton" binding="browseForDestinationFolder">
             <constraints>
               <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
