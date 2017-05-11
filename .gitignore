@@ -27,15 +27,16 @@ hs_err_pid*
 
 # IntelliJ project files
 out/
-gen
-cards-browser/.gradle/
-cards-browser/build/
-documentatio/
+.idea/dictionaries
+.idea/libraries
+.idea/workspace.xml
 examples/
 lib/
 untitled/
 untitled1/
 untitled2/
-.idea/*iws,
+cards-browser/.gradle/
+cards-browser/build/
+.idea/*iws
 .idea/workspace.xml
 .idea/tasks.xml
