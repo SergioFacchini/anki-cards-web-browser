@@ -36,3 +36,6 @@ lib/
 untitled/
 untitled1/
 untitled2/
+.idea/*iws,
+.idea/workspace.xml
+.idea/tasks.xml
