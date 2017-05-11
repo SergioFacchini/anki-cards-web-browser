@@ -6,10 +6,14 @@ import com.github.slavetto.parser.dbmodels.DBNote;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
+import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 
 import java.io.File;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /*
  * Created with ♥
@@ -73,5 +77,43 @@ class AnkiDatabase {
                 .where()
                 .eq("did", deckId)
                 .countOf();
+    }
+
+    List<String> getTagsOfDeck(long deckId) throws SQLException {
+        return getAllNotesOfDeck(deckId)
+                .stream()
+                .map(DBNote::getTags)
+                .distinct()
+                .collect(Collectors.toList()
+        );
+    }
+
+    private List<DBNote> getAllNotesOfDeck(long deckId) throws SQLException {
+        QueryBuilder<DBCard, Integer> cqb = cardsDAO.queryBuilder();
+        cqb.where().eq("did", deckId);
+
+        QueryBuilder<DBNote, Integer> nqb = notesDAO.queryBuilder()
+                .join(cqb)
+                .distinct();
+
+        return nqb.query();
+    }
+
+    /**
+     * Calculates how many cards in the deck have the specific tags
+     * @param deckId the id of the deck
+     * @param tags the tags to look for
+     * @return how many cards in the deck have the specific tags
+     */
+    long getNumCardsHavingTagInDeck(long deckId, String tags) throws SQLException {
+        QueryBuilder<DBCard, Integer> cqb = cardsDAO.queryBuilder();
+        cqb.where().eq("did", deckId);
+
+        return notesDAO.queryBuilder()
+                .join(cqb)
+                .where()
+                    .eq("tags", tags)
+                .countOf();
+
     }
 }

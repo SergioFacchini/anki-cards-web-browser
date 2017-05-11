@@ -1,6 +1,7 @@
 package com.github.slavetto.gui;
 
 import com.github.slavetto.gui.viewmodels.DeckWithCardNumber;
+import com.github.slavetto.gui.viewmodels.DecksWithTags;
 import com.github.slavetto.parser.APKGParser;
 import com.github.slavetto.parser.exceptions.AnkiDatabaseNotFoundException;
 import com.github.slavetto.parser.models.DeckInfo;
@@ -9,10 +10,13 @@ import com.threerings.signals.Signal0;
 import net.lingala.zip4j.exception.ZipException;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 public class MainFrame extends JFrame {
@@ -23,10 +27,16 @@ public class MainFrame extends JFrame {
     private JList<DeckWithCardNumber> whatDecksList;
     private JTextField textField2;
     private JButton browseButton;
-    private JList whatCategoriesList;
+    private JList<DecksWithTags> whatCategoriesList;
     private JButton startBtn;
     private JCheckBox randomizeCardsPositionsCheckBox;
     private JLabel apkgSelectedStatus;
+    private JLabel howManyCardsSelectedForExport;
+
+    /**
+     * It's true if the user has just selected the deck and the calculation of the cards numbers etc.. are taking place.
+     */
+    private boolean isFirstSetupInProgress = false;
 
     /**
      * The parser associated to the currently selected .apkg file. It's null until no file has been selected.
@@ -36,7 +46,7 @@ public class MainFrame extends JFrame {
 
     private final Signal0 onValidParserSelected = new Signal0();
 
-    public MainFrame() {
+    private MainFrame() {
         setTitle("Anki Cards Web Browsers generator");
         setContentPane(contentPane);
         getRootPane().setDefaultButton(buttonOK);
@@ -45,6 +55,24 @@ public class MainFrame extends JFrame {
         //What decks to generate the browser for
         whatDecksList.setModel(new DefaultComboBoxModel<>());
         whatDecksList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        whatDecksList.addListSelectionListener(e -> {
+            //When changing decks to export, we refresh the list of tags to export
+            if (!isFirstSetupInProgress) {
+                fetchTagsOfSelectedDecks();
+            }
+        });
+
+        //What tags to consider for exporting
+        whatCategoriesList.setModel(new DefaultComboBoxModel<>());
+        whatCategoriesList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        whatCategoriesList.addListSelectionListener(x -> {
+            long numCardsToExport = whatCategoriesList.getSelectedValuesList()
+                    .stream()
+                    .mapToLong(DecksWithTags::getNumCards)
+                    .sum();
+
+            howManyCardsSelectedForExport.setText("Cards to export: "+numCardsToExport);
+        });
 
         //Chooser
         fileChooser = new JFileChooser();
@@ -59,15 +87,36 @@ public class MainFrame extends JFrame {
 
         //Self listeners
         onValidParserSelected.connect(() -> { //Decks counter
+            isFirstSetupInProgress = true;
+
             fetchCardCount();
             fetchDeckNames();
-            fetchTags();
+            fetchTagsOfSelectedDecks();
+
+            isFirstSetupInProgress = false;
         });
     }
 
-    private void fetchTags() {
+    private void fetchTagsOfSelectedDecks() {
+        ArrayList<DecksWithTags> deckTags = new ArrayList<>();
+        try {
+            for (DeckWithCardNumber deck : getDecksSelectedForExport()) {
+                for (String tag: currentParser.fetchTagsOfDeck(deck.getDeckId())) {
+                    long numCards = currentParser.getNumCardsHavingTagInDeck(deck.getDeckId(), tag);
+                    deckTags.add(new DecksWithTags(deck.getDeckName(), tag, numCards));
+                }
+            }
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
 
 
+        whatCategoriesList.setModel(new DefaultComboBoxModel<DecksWithTags>(new Vector<>(deckTags)));
+        whatCategoriesList.setSelectionInterval(0, deckTags.size() - 1);
+    }
+
+    private List<DeckWithCardNumber> getDecksSelectedForExport() {
+        return whatDecksList.getSelectedValuesList();
     }
 
     private void fetchCardCount() {
@@ -91,7 +140,7 @@ public class MainFrame extends JFrame {
             }
 
             whatDecksList.setModel(new DefaultComboBoxModel<DeckWithCardNumber>(new Vector<>(decksForList)));
-            whatDecksList.setSelectionInterval(0, deckInfos.size() - 1);
+            whatDecksList.setSelectionInterval(0, decksForList.size() - 1);
         } catch (SQLException e) {
             e.printStackTrace();
         }

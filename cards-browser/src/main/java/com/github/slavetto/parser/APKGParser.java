@@ -10,6 +10,7 @@ import net.lingala.zip4j.exception.ZipException;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
 /*
  * Created with ♥
@@ -29,15 +30,6 @@ public class APKGParser {
 
     public APKGParser(File apgkFilePath) {
         this.apgkFilePath = apgkFilePath;
-    }
-
-    public void parseDecksAndTags() throws IOException, ZipException, SQLException, AnkiDatabaseNotFoundException {
-        //1) Unzip the *.apgk file
-        //2) Fetch the decks' names and categories from the database
-        //3) Fetch the tags for each deck
-
-
-
     }
 
     /**
@@ -118,4 +110,21 @@ public class APKGParser {
         return database.getNumCardsInDeck(deckId);
     }
 
+    /**
+     * @return a list of tags that the current deck has associated with it. For notes that don't have any tag returns a
+     * "(no tag)" string.
+     */
+    public List<String> fetchTagsOfDeck(long deckId) throws SQLException {
+        return database.getTagsOfDeck(deckId);
+    }
+
+    /**
+     * Calculates how many cards in the deck have the specific tags
+     * @param deckId the id of the deck
+     * @param tags the tags to look for
+     * @return how many cards in the deck have the specific tags
+     */
+    public long getNumCardsHavingTagInDeck(long deckId, String tags) throws SQLException {
+        return database.getNumCardsHavingTagInDeck(deckId, tags);
+    }
 }
