@@ -28,7 +28,7 @@
                     <ul>
                         <li v-for="category in selectedDeck.categories">
                             <label><input type="checkbox" v-model="selectedCategories"
-                                          :value="category.categoryName">{{ category.categoryName }}</label>
+                                          :value="category.categoryName">{{ category.categoryName || "(no category)" }}</label>
                         </li>
                     </ul>
                 </div>
