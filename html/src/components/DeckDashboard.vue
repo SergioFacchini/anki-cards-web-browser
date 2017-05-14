@@ -127,7 +127,7 @@
                         .map(category => category.cards)
                         .reduce((a, b) => a.concat(b));
                 } else {
-                    this.cards = deck.cards;
+                    this.cards = info.deck.cards;
                 }
 
                 // Randomize if necessary
