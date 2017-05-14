@@ -4,6 +4,7 @@ import com.github.slavetto.parser.dbmodels.DBCard;
 import com.github.slavetto.parser.dbmodels.DBConfig;
 import com.github.slavetto.parser.dbmodels.DBNote;
 import com.github.slavetto.parser.models.CardReference;
+import com.github.slavetto.utils.NaturalOrderComparator;
 import com.google.common.collect.Lists;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
@@ -90,6 +91,7 @@ class AnkiDatabase {
                 .stream()
                 .map(DBNote::getTags)
                 .distinct()
+                .sorted(NaturalOrderComparator.INSTANCE::compare)
                 .collect(Collectors.toList()
         );
     }

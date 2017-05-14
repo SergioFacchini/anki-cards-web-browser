@@ -3,6 +3,7 @@ package com.github.slavetto.exporter;
 import com.github.slavetto.parser.APKGParser;
 import com.github.slavetto.parser.models.DeckInfo;
 import com.github.slavetto.parser.models.RenderedCard;
+import com.github.slavetto.utils.NaturalOrderComparator;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -34,12 +35,17 @@ class DeckWithCategories extends GeneratedDeck {
     protected void addCardsToJson(JSONObject json) {
         JSONArray categoriesArray = new JSONArray();
 
-        tagsCards.forEach((tag, cards) -> {
+        ArrayList<String> tags = new ArrayList<>(tagsCards.keySet());
+        tags.sort(NaturalOrderComparator.INSTANCE);
+
+        tags.forEach(tag -> {
             JSONArray cardsOfCategory = new JSONArray();
+
+            ArrayList<RenderedCard> cards = tagsCards.get(tag);
             cards.forEach(card -> cardsOfCategory.put(calculateCardJSON(card)));
 
             JSONObject categoryObject = new JSONObject();
-            categoryObject.put("categoryName", tag);
+            categoryObject.put("categoryName", tag.trim());
             categoryObject.put("cards", cardsOfCategory);
 
             categoriesArray.put(categoryObject);
