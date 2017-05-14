@@ -1,15 +1,15 @@
 package com.github.slavetto.parser;
 
 import com.github.slavetto.parser.exceptions.AnkiDatabaseNotFoundException;
-import com.github.slavetto.parser.models.CardModels;
-import com.github.slavetto.parser.models.DeckInfos;
+import com.github.slavetto.parser.exceptions.DatabaseInconsistentException;
+import com.github.slavetto.parser.models.*;
 import com.google.common.io.Files;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 
 import java.io.File;
-import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -30,6 +30,10 @@ public class APKGParser {
 
     public APKGParser(File apgkFilePath) {
         this.apgkFilePath = apgkFilePath;
+    }
+
+    public CardModels getCardModels() {
+        return cardModels;
     }
 
     /**
@@ -126,5 +130,44 @@ public class APKGParser {
      */
     public long getNumCardsHavingTagInDeck(long deckId, String tags) throws SQLException {
         return database.getNumCardsHavingTagInDeck(deckId, tags);
+    }
+
+    /**
+     * Retrieves and generates all the cards that belong to the given deck and having the give category
+     * @param deckId id of the deck
+     * @param tags the tags that the note must have
+     * @return a list containing all the cards
+     */
+    public ArrayList<RenderedCard> generateCardsOfDeck(long deckId, String tags) throws SQLException {
+        ArrayList<RenderedCard> renderedCards = new ArrayList<>();
+        for (CardReference cardReference : database.fetchCards(deckId, tags)) {
+            CardModel model = getCardModel(cardReference.getCardModelId());
+            renderedCards.add(model.render(cardReference));
+        }
+
+        return renderedCards;
+    }
+
+    private CardModel getCardModel(long cardModelId) {
+        return cardModels.stream()
+                .filter(cardModel -> cardModel.getId() == cardModelId)
+                .findFirst()
+                .orElseThrow(() -> new DatabaseInconsistentException("Unknown card model id: "+cardModelId));
+
+    }
+
+    /**
+     * Retrieves and generates all the cards that belong to the given deck
+     * @param deckId id of the deck
+     * @return a list containing all the cards
+     */
+    public ArrayList<RenderedCard> generateCardsOfDeck(long deckId) throws SQLException {
+        ArrayList<RenderedCard> renderedCards = new ArrayList<>();
+        for (CardReference cardReference : database.fetchCards(deckId)) {
+            CardModel model = getCardModel(cardReference.getCardModelId());
+            renderedCards.add(model.render(cardReference));
+        }
+
+        return renderedCards;
     }
 }

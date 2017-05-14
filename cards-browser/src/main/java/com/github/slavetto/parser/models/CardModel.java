@@ -9,7 +9,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-class CardModel {
+public class CardModel {
 
     private long id;
     private String css;
@@ -40,10 +40,41 @@ class CardModel {
 
         model.templates = new ArrayList<>(templatesJson.length());
         for (Object object : templatesJson) {
-            model.templates.add(CardTemplate.fromJSON((JSONObject) object));
+            model.templates.add(createCardTemplateFromJSON((JSONObject) object));
         }
 
         return model;
     }
 
+    private static CardTemplate createCardTemplateFromJSON(JSONObject object) {
+        return new CardTemplate(
+                object.getString("qfmt"),
+                object.getString("afmt"),
+                object.getInt("ord")
+        );
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public String getCss() {
+        return css;
+    }
+
+    public ArrayList<String> getFields() {
+        return fields;
+    }
+
+    public ArrayList<CardTemplate> getTemplates() {
+        return templates;
+    }
+
+    public RenderedCard render(CardReference cardReference) {
+        CardTemplate templateToUse = templates.get(cardReference.getTemplateOrd());
+        String frontHTML = templateToUse.renderFront(cardReference, fields);
+        String rearHTML  = templateToUse.renderRear(cardReference, fields);
+
+        return new RenderedCard(frontHTML, rearHTML, cardReference.getId(), getId());
+    }
 }

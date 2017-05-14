@@ -3,17 +3,23 @@ package com.github.slavetto.parser;
 import com.github.slavetto.parser.dbmodels.DBCard;
 import com.github.slavetto.parser.dbmodels.DBConfig;
 import com.github.slavetto.parser.dbmodels.DBNote;
+import com.github.slavetto.parser.models.CardReference;
+import com.google.common.collect.Lists;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
+import com.j256.ormlite.dao.RawRowObjectMapper;
+import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 
 import java.io.File;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static com.j256.ormlite.field.DataType.*;
 
 /*
  * Created with ♥
@@ -115,5 +121,59 @@ class AnkiDatabase {
                     .eq("tags", tags)
                 .countOf();
 
+    }
+
+    /**
+     * Retrieves all the cards from a deck having the given tags.
+     * @param deckId the id of the deck to pull the cards from
+     * @param tags the tags that the cards must have
+     * @return a list of cards.
+     */
+    ArrayList<CardReference> fetchCards(long deckId, String tags) throws SQLException {
+        String query =
+                "SELECT C.id, N.mid, C.ord, N.flds " +
+                "FROM cards C " +
+                "  JOIN notes N " +
+                "    ON C.nid = N.id " +
+                "WHERE C.did = ? AND N.tags = ? ";
+
+        DataType[] columnTypes = {LONG, LONG, INTEGER, STRING};
+        String[] params = {String.valueOf(deckId), tags};
+
+        return Lists.newArrayList(cardsDAO.queryRaw(query, columnTypes, getCardRawRowObjectMapper(), params));
+    }
+
+    /**
+     * Retrieves and generates all the cards that belong to the given deck and having the give category
+     * @param deckId id of the deck
+     * @return a list containing all the cards
+     */
+    ArrayList<CardReference> fetchCards(long deckId) throws SQLException {
+        String query =
+                "SELECT C.id, N.mid, C.ord, N.flds " +
+                "FROM cards C " +
+                "  JOIN notes N " +
+                "    ON C.nid = N.id " +
+                "WHERE C.did = ? ";
+
+        DataType[] columnTypes = {LONG, LONG, INTEGER, STRING};
+        String[] params = {String.valueOf(deckId)};
+
+        return Lists.newArrayList(cardsDAO.queryRaw(query, columnTypes, getCardRawRowObjectMapper(), params));
+    }
+
+    private RawRowObjectMapper<CardReference> getCardRawRowObjectMapper() {
+        return (columnNames, dataTypes, resultColumns) -> {
+            //The fields in database are separated by the "\u001F" character
+            String fieldsToSplit = (String) resultColumns[3]; //N.flds
+            String[] fieldValues = fieldsToSplit.split("\u001F");
+
+            return new CardReference(
+                    (Long)    resultColumns[0], //C.id
+                    (Long)    resultColumns[1], //N.mid
+                    (Integer) resultColumns[2], //C.ord
+                    fieldValues
+            );
+        };
     }
 }

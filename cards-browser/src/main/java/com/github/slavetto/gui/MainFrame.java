@@ -1,5 +1,6 @@
 package com.github.slavetto.gui;
 
+import com.github.slavetto.exporter.Exporter;
 import com.github.slavetto.gui.viewmodels.DeckWithCardNumber;
 import com.github.slavetto.gui.viewmodels.DecksWithTags;
 import com.github.slavetto.parser.APKGParser;
@@ -11,9 +12,9 @@ import net.lingala.zip4j.exception.ZipException;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +29,7 @@ public class MainFrame extends JFrame {
     private JTextField exportFolderText;
     private JButton browseForDestinationFolder;
     private JList<DecksWithTags> whatCategoriesList;
-    private JButton startBtn;
+    private JButton exportBtn;
     private JCheckBox randomizeCardsPositionsCheckBox;
     private JLabel apkgSelectedStatus;
     private JLabel howManyCardsSelectedForExport;
@@ -99,6 +100,63 @@ public class MainFrame extends JFrame {
             }
         });
 
+        exportBtn.addActionListener(e -> {
+            if (destinationFolder == null) {
+                JOptionPane.showMessageDialog(
+                    this,
+                    "Please, choose a destination folder",
+                    "Choose a destination folder",
+                    JOptionPane.ERROR_MESSAGE
+                );
+                return;
+            }
+
+            Exporter exporter = new Exporter(currentParser, destinationFolder, getTagsSelectedForExport());
+            try {
+                exporter.tryExporting();
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "The browser was generated correctly!",
+                        "Browser generated",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+
+                //Opening the export folder
+                Desktop.getDesktop().open(destinationFolder);
+
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+                JOptionPane.showMessageDialog(
+                        this,
+                        "A database error occurred when trying to generate the browser.\n" +
+                                 "Please check that the apgk file is not damaged. If necessary try to re-export it, " +
+                                 "then retry.",
+                        "A database error occurred",
+                        JOptionPane.ERROR_MESSAGE
+                );
+            } catch (IOException e1) {
+                e1.printStackTrace();
+                JOptionPane.showMessageDialog(
+                        this,
+                        "An error occurred when writing the browser.\n" +
+                                 "Please check that the folder you supplied is valid and writable. If necessary, " +
+                                 "change the folder and retry.",
+                        "A file error occurred",
+                        JOptionPane.ERROR_MESSAGE
+                );
+            } catch (Exception e1) {
+                e1.printStackTrace();
+                JOptionPane.showMessageDialog(
+                        this,
+                        "An unknown error occurred when writing the browser.\nHere are the technical details:\n" +
+                                 e1.getMessage(),
+                        "A very bad error occurred.",
+                        JOptionPane.ERROR_MESSAGE
+                );
+            }
+        });
+
         //Self listeners
         onValidParserSelected.connect(() -> { //Decks counter
             isFirstSetupInProgress = true;
@@ -137,6 +195,11 @@ public class MainFrame extends JFrame {
 
     private List<DeckWithCardNumber> getDecksSelectedForExport() {
         return whatDecksList.getSelectedValuesList();
+    }
+
+
+    private JList<DecksWithTags> getTagsSelectedForExport() {
+        return whatCategoriesList;
     }
 
     private void fetchCardCount() {
