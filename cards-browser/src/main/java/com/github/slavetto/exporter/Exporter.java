@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /*
  * Created with ♥
@@ -70,16 +71,27 @@ public class Exporter {
     private GeneratedDeck generateDeck(DeckInfo deckInfo, APKGParser parser) throws SQLException {
         GeneratedDeck deck;
 
-        List<String> tags = parser.fetchTagsOfDeck(deckInfo.getId());
-        if(tags.isEmpty()){
-            deck = new DeckWithoutCategories(deckInfo);
+        List<String> tagsToExport = getTagsToExportForDeck(deckInfo);
+        if(tagsToExport.isEmpty()){
+            //We filtered out all the tags for this deck (including the default one). This is an empty deck.
+            deck = new EmptyDeck(deckInfo);
+        } else if(tagsToExport.size() == 1){ //No tags or only the default one
+            deck = new DeckWithoutCategories(deckInfo, tagsToExport.get(0));
         } else {
-            deck = new DeckWithCategories(deckInfo, tags);
+            deck = new DeckWithCategories(deckInfo, tagsToExport);
         }
 
         deck.generate(parser);
 
         return deck;
+    }
+
+    private List<String> getTagsToExportForDeck(DeckInfo deckInfo) {
+        return tagsToExport
+            .stream()
+            .filter(deckWithTags -> deckWithTags.getDeckId() == deckInfo.getId())
+            .map(DecksWithTags::getTags)
+            .collect(Collectors.toList());
     }
 
 }

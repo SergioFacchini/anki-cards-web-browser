@@ -18,10 +18,12 @@ import java.util.ArrayList;
  */
 public class DeckWithoutCategories extends GeneratedDeck {
 
+    private final String tagToLookFor;
     private ArrayList<RenderedCard> cards;
 
-    DeckWithoutCategories(DeckInfo deckInfo) {
+    DeckWithoutCategories(DeckInfo deckInfo, String tagToLookFor) {
         super(deckInfo);
+        this.tagToLookFor = tagToLookFor;
     }
 
     @Override
@@ -39,7 +41,7 @@ public class DeckWithoutCategories extends GeneratedDeck {
 
     @Override
     public void generate(APKGParser parser) throws SQLException {
-        cards = parser.generateCardsOfDeck(deckInfo.getId());
+        cards = parser.generateCardsOfDeck(deckInfo.getId(), tagToLookFor);
     }
 
     @Override

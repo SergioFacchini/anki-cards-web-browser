@@ -181,7 +181,7 @@ public class MainFrame extends JFrame {
             for (DeckWithCardNumber deck : getDecksSelectedForExport()) {
                 for (String tag: currentParser.fetchTagsOfDeck(deck.getDeckId())) {
                     long numCards = currentParser.getNumCardsHavingTagInDeck(deck.getDeckId(), tag);
-                    deckTags.add(new DecksWithTags(deck.getDeckName(), tag, numCards));
+                    deckTags.add(new DecksWithTags(deck.getDeckId(), deck.getDeckName(), tag, numCards));
                 }
             }
         } catch(SQLException e) {

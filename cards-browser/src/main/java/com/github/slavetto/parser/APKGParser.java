@@ -155,19 +155,4 @@ public class APKGParser {
                 .orElseThrow(() -> new DatabaseInconsistentException("Unknown card model id: "+cardModelId));
 
     }
-
-    /**
-     * Retrieves and generates all the cards that belong to the given deck
-     * @param deckId id of the deck
-     * @return a list containing all the cards
-     */
-    public ArrayList<RenderedCard> generateCardsOfDeck(long deckId) throws SQLException {
-        ArrayList<RenderedCard> renderedCards = new ArrayList<>();
-        for (CardReference cardReference : database.fetchCards(deckId)) {
-            CardModel model = getCardModel(cardReference.getCardModelId());
-            renderedCards.add(model.render(cardReference));
-        }
-
-        return renderedCards;
-    }
 }

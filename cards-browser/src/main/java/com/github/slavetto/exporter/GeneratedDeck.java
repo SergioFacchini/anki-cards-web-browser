@@ -79,6 +79,7 @@ public abstract class GeneratedDeck {
     /**
      * Fetches all the elements needed to build the JSON of the deck.
      * @param parser the deck's parser
+     *
      */
     public abstract void generate(APKGParser parser) throws SQLException;
 

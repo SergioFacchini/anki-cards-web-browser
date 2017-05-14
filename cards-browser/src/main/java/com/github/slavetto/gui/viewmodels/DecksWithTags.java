@@ -9,11 +9,13 @@ package com.github.slavetto.gui.viewmodels;
  */
 public class DecksWithTags {
 
+    private final long deckId;
     private final String deckName;
     private final String tags;
     private final long numCards;
 
-    public DecksWithTags(String deckName, String tags, long numCards) {
+    public DecksWithTags(long deckId, String deckName, String tags, long numCards) {
+        this.deckId = deckId;
         this.deckName = deckName;
         this.tags = tags;
         this.numCards = numCards;
@@ -38,5 +40,9 @@ public class DecksWithTags {
         } else {
             return String.format("%s [%s] (%d)", deckName, tags.trim(), numCards);
         }
+    }
+
+    public long getDeckId() {
+        return deckId;
     }
 }
