@@ -61,4 +61,9 @@ class DeckWithCategories extends GeneratedDeck {
         }
     }
 
+    @Override
+    boolean isEmpty() {
+        return tagsCards.isEmpty();
+    }
+
 }

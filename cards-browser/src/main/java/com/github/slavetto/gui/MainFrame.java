@@ -198,8 +198,8 @@ public class MainFrame extends JFrame {
     }
 
 
-    private JList<DecksWithTags> getTagsSelectedForExport() {
-        return whatCategoriesList;
+    private List<DecksWithTags> getTagsSelectedForExport() {
+        return whatCategoriesList.getSelectedValuesList();
     }
 
     private void fetchCardCount() {

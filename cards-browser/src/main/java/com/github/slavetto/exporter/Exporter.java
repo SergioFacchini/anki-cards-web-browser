@@ -9,7 +9,6 @@ import com.google.common.io.Files;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -26,9 +25,9 @@ public class Exporter {
 
     private final APKGParser parser;
     private final File destinationFolder;
-    private final JList<DecksWithTags> tagsToExport;
+    private final List<DecksWithTags> tagsToExport;
 
-    public Exporter(APKGParser parser, File destinationFolder, JList<DecksWithTags> tagsToExport) {
+    public Exporter(APKGParser parser, File destinationFolder, List<DecksWithTags> tagsToExport) {
         this.parser = parser;
         this.destinationFolder = destinationFolder;
         this.tagsToExport = tagsToExport;
@@ -40,7 +39,7 @@ public class Exporter {
     }
 
     public void writeJsonFile(JSONObject json) throws IOException {
-        File file = new File(destinationFolder, "data.json");
+        File file = new File(destinationFolder, "decks.json");
         Files.write(json.toString(2), file, Charsets.UTF_8);
     }
 
@@ -49,7 +48,10 @@ public class Exporter {
 
         JSONArray decksJson = new JSONArray();
         for (DeckInfo deckInfo : parser.getDeckInfos()) {
-            decksJson.put(generateDeck(deckInfo, parser).toJSON());
+            GeneratedDeck generatedDeck = generateDeck(deckInfo, parser);
+            if(!generatedDeck.isEmpty()) {
+                decksJson.put(generatedDeck.toJSON());
+            }
         }
         root.put("decks", decksJson);
 

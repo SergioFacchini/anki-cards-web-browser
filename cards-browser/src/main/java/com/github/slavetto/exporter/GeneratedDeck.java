@@ -81,4 +81,9 @@ public abstract class GeneratedDeck {
      * @param parser the deck's parser
      */
     public abstract void generate(APKGParser parser) throws SQLException;
+
+    /**
+     * @return true if this deck has no cards, false otherwise
+     */
+    abstract boolean isEmpty();
 }

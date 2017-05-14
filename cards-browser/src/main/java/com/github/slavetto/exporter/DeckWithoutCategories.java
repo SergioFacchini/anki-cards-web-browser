@@ -42,4 +42,9 @@ public class DeckWithoutCategories extends GeneratedDeck {
         cards = parser.generateCardsOfDeck(deckInfo.getId());
     }
 
+    @Override
+    boolean isEmpty() {
+        return cards.isEmpty();
+    }
+
 }
