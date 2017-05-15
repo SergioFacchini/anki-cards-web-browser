@@ -6,10 +6,14 @@ import com.github.slavetto.parser.models.*;
 import com.google.common.io.Files;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
+import org.json.JSONObject;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /*
@@ -27,6 +31,12 @@ public class APKGParser {
 
     private CardModels cardModels;
     private DeckInfos deckInfos;
+
+    /**
+     * Keeps track of the compressed images' names and their corresponding original names. For "original names" we mean
+     * the names that are used in the cards.
+     */
+    private HashMap<String, String> imageNamesDictionary;
 
     public APKGParser(File apgkFilePath) {
         this.apgkFilePath = apgkFilePath;
@@ -78,11 +88,31 @@ public class APKGParser {
      * Tries to "open" the apkg file specified in the constructor. By "opening" the file we means unzipping it,
      * establishing a connection to the database and reading the media file.
      */
-    public void tryOpenFile() throws ZipException, SQLException, AnkiDatabaseNotFoundException {
+    public void tryOpenFile() throws ZipException, SQLException, AnkiDatabaseNotFoundException, IOException {
         unzip();
         initDeckDatabase();
         fetchDecksInfos();
         fetchCardModels();
+        readMediaDictionaryJson();
+    }
+
+    private void readMediaDictionaryJson() throws IOException {
+        //Reading file
+        File mediaFile = new File(unzippedToFolder, "media");
+        String mediaStr = Files.toString(mediaFile, Charset.forName("UTF-8"));
+
+        //Parsing JSON
+        //The JSON is something like this:
+        //{
+        // "10": "paste-61641370632193.jpg",
+        // "4": "paste-81522774245377.jpg",
+        // "1": "latex-0cc8b5131ccb25b20258394ebcf13773bb8b2d19.png"
+        //}
+        imageNamesDictionary = new HashMap<>();
+
+        JSONObject mediaObject = new JSONObject(mediaStr);
+        mediaObject.toMap()
+                .forEach((key, value) -> imageNamesDictionary.put(key, (String) value));
     }
 
     private void fetchDecksInfos() throws SQLException {
@@ -154,5 +184,20 @@ public class APKGParser {
                 .findFirst()
                 .orElseThrow(() -> new DatabaseInconsistentException("Unknown card model id: "+cardModelId));
 
+    }
+
+    /**
+     * @return the folder where the apkg file has been temporarily unzipped.
+     */
+    public File getUnzippedToFolder() {
+        return unzippedToFolder;
+    }
+
+    /**
+     * @return the association between the name of the unzipped file and the name of the image that will be used in
+     * cards.
+     */
+    public HashMap<String, String> getImageNamesDictionary() {
+        return imageNamesDictionary;
     }
 }

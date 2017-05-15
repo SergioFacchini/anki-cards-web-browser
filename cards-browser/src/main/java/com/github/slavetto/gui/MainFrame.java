@@ -1,5 +1,6 @@
 package com.github.slavetto.gui;
 
+import com.github.slavetto.exporter.AnkiExpectedExportingException;
 import com.github.slavetto.exporter.Exporter;
 import com.github.slavetto.gui.viewmodels.DeckWithCardNumber;
 import com.github.slavetto.gui.viewmodels.DecksWithTags;
@@ -135,7 +136,7 @@ public class MainFrame extends JFrame {
                         "A database error occurred",
                         JOptionPane.ERROR_MESSAGE
                 );
-            } catch (IOException e1) {
+            } catch (IOException|AnkiExpectedExportingException e1) {
                 e1.printStackTrace();
                 JOptionPane.showMessageDialog(
                         this,
@@ -244,18 +245,16 @@ public class MainFrame extends JFrame {
             currentParser.tryOpenFile();
 
             onValidParserSelected.dispatch();
-        } catch (ZipException e) {
+        } catch (ZipException | SQLException | IOException | AnkiDatabaseNotFoundException e) {
             e.printStackTrace();
-
-            currentParser.clear();
-            currentParser = null;
-        } catch (SQLException e) {
-            e.printStackTrace();
-
-            currentParser.clear();
-            currentParser = null;
-        } catch (AnkiDatabaseNotFoundException e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(
+                    this,
+                    "An error occurred when trying to open Anki archive\n" +
+                            "Please check that the selected archive is valid. If necessary re-export it again and retry.\n"+
+                    "Technical error: "+e.getMessage(),
+                    "An error occurred when trying to open Anki archive",
+                    JOptionPane.ERROR_MESSAGE
+            );
 
             currentParser.clear();
             currentParser = null;

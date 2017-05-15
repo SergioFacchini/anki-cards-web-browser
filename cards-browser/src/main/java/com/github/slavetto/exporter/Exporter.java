@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,13 +35,33 @@ public class Exporter {
         this.tagsToExport = tagsToExport;
     }
 
-    public void tryExporting() throws SQLException, IOException {
-        //For now, we just generate the data-json.
+    public void tryExporting() throws SQLException, IOException, AnkiExpectedExportingException {
         writeJsonFile(generateDataJson());
+        moveAndRenameImageFiles();
+    }
+
+    private void moveAndRenameImageFiles() throws AnkiExpectedExportingException {
+        HashMap<String, String> imageNamesDictionary = parser.getImageNamesDictionary();
+
+        File imagesFolder = new File(destinationFolder, "anki-images");
+        imagesFolder.mkdirs();
+
+        imageNamesDictionary.forEach((currentName, targetName) -> {
+            File originalFile    = new File(parser.getUnzippedToFolder(), currentName);
+            File destinationFile = new File(imagesFolder, targetName);
+
+            try {
+                Files.copy(originalFile, destinationFile);
+            } catch (IOException e) {
+                throw new AnkiExpectedExportingException("Cannot move "+originalFile+" to "+destinationFile);
+            }
+        });
     }
 
     public void writeJsonFile(JSONObject json) throws IOException {
         File file = new File(destinationFolder, "decks.json");
+
+        //We want the json to be hand-editable, so we set the indent factor to 2
         Files.write(json.toString(2), file, Charsets.UTF_8);
     }
 
