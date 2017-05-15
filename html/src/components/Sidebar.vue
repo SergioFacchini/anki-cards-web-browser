@@ -190,6 +190,7 @@
 
     .select-deck {
         font-size: 24px;
+        max-width: 300px;
     }
 
     .category-list-container {
