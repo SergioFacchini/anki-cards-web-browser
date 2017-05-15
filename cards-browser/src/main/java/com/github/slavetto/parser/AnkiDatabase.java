@@ -91,7 +91,7 @@ class AnkiDatabase {
                 .stream()
                 .map(DBNote::getTags)
                 .distinct()
-                .sorted(NaturalOrderComparator.INSTANCE::compare)
+                .sorted(NaturalOrderComparator.INSTANCE)
                 .collect(Collectors.toList()
         );
     }
@@ -141,25 +141,6 @@ class AnkiDatabase {
 
         DataType[] columnTypes = {LONG, LONG, INTEGER, STRING};
         String[] params = {String.valueOf(deckId), tags};
-
-        return Lists.newArrayList(cardsDAO.queryRaw(query, columnTypes, getCardRawRowObjectMapper(), params));
-    }
-
-    /**
-     * Retrieves and generates all the cards that belong to the given deck and having the give category
-     * @param deckId id of the deck
-     * @return a list containing all the cards
-     */
-    ArrayList<CardReference> fetchCards(long deckId) throws SQLException {
-        String query =
-                "SELECT C.id, N.mid, C.ord, N.flds " +
-                "FROM cards C " +
-                "  JOIN notes N " +
-                "    ON C.nid = N.id " +
-                "WHERE C.did = ? ";
-
-        DataType[] columnTypes = {LONG, LONG, INTEGER, STRING};
-        String[] params = {String.valueOf(deckId)};
 
         return Lists.newArrayList(cardsDAO.queryRaw(query, columnTypes, getCardRawRowObjectMapper(), params));
     }

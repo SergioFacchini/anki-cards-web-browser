@@ -10,6 +10,7 @@ import com.j256.ormlite.table.DatabaseTable;
 /**
  * A database model for the table that contains information about note models and decks
  */
+@SuppressWarnings("ALL")
 @DatabaseTable(tableName = "col")
 public class DBConfig {
 

@@ -22,13 +22,13 @@ package com.github.slavetto.utils;
 
 import java.util.Comparator;
 
-public class NaturalOrderComparator <T> implements Comparator<T> {
+public class NaturalOrderComparator implements Comparator<String> {
 
-    public static NaturalOrderComparator INSTANCE = new NaturalOrderComparator();
+    public static final NaturalOrderComparator INSTANCE = new NaturalOrderComparator();
 
     private NaturalOrderComparator() { }
 
-    int compareRight(String a, String b) {
+    private int compareRight(String a, String b) {
         int bias = 0, ia = 0, ib = 0;
 
         // The longest run of digits wins. That aside, the greatest
@@ -62,12 +62,9 @@ public class NaturalOrderComparator <T> implements Comparator<T> {
         }
     }
 
-    public int compare(T o1, T o2) {
-        String a = o1.toString();
-        String b = o2.toString();
-
+    public int compare(String a, String b) {
         int ia = 0, ib = 0;
-        int nza = 0, nzb = 0;
+        int nza, nzb;
         char ca, cb;
 
         while (true) {
@@ -125,7 +122,7 @@ public class NaturalOrderComparator <T> implements Comparator<T> {
         }
     }
 
-    static char charAt(String s, int i) {
+    private static char charAt(String s, int i) {
         return i >= s.length() ? 0 : s.charAt(i);
     }
 }

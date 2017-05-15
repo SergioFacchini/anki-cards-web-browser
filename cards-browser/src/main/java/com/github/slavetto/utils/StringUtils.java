@@ -51,6 +51,7 @@ public class StringUtils {
                 e.printStackTrace();
             }
 
+            //noinspection ConstantConditions
             BigInteger biginteger = new BigInteger(1, digest);
             result = biginteger.toString(16);
 

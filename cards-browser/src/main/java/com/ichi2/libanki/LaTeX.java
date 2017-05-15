@@ -1,4 +1,4 @@
-/***************************************************************************************
+/*--------------------------------------------------------------------------------------*
  * Copyright (c) 2009 Edu Zamora <edu.zasu@gmail.com>                                   *
  * Copyright (c) 2012 Kostas Spyropoulos <inigo.aldana@gmail.com>                       *
  * Copyright (c) 2015 Houssam Salem <houssam.salem.au@gmail.com>                        *
@@ -14,7 +14,7 @@
  *                                                                                      *
  * You should have received a copy of the GNU General Public License along with         *
  * this program.  If not, see <http://www.gnu.org/licenses/>.                           *
- ****************************************************************************************/
+ *--------------------------------------------------------------------------------------*/
 
 package com.ichi2.libanki;
 
@@ -41,11 +41,11 @@ public class LaTeX {
     /**
      * Patterns used to identify LaTeX tags
      */
-    public static Pattern sStandardPattern = Pattern.compile("\\[latex\\](.+?)\\[/latex\\]",
+    private static final Pattern sStandardPattern = Pattern.compile("\\[latex](.+?)\\[/latex]",
             Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
-    public static Pattern sExpressionPattern = Pattern.compile("\\[\\$\\](.+?)\\[/\\$\\]",
+    private static final Pattern sExpressionPattern = Pattern.compile("\\[\\$](.+?)\\[/\\$]",
             Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
-    public static Pattern sMathPattern = Pattern.compile("\\[\\$\\$\\](.+?)\\[/\\$\\$\\]",
+    private static final Pattern sMathPattern = Pattern.compile("\\[\\$\\$](.+?)\\[/\\$\\$]",
             Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
 
     /**

@@ -14,7 +14,7 @@ import java.sql.SQLException;
 /**
  * A deck that can generate it's cards an prepare them for export in the JSON file.
  */
-public abstract class GeneratedDeck {
+abstract class GeneratedDeck {
 
     final DeckInfo deckInfo;
 

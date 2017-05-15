@@ -45,8 +45,8 @@ public class MainFrame extends JFrame {
      */
     private APKGParser currentParser;
 
-    private JFileChooser apkgChooser;
-    private JFileChooser destinationFolderChooser;
+    private final JFileChooser apkgChooser;
+    private final JFileChooser destinationFolderChooser;
 
     //Exporting options
     private File destinationFolder;

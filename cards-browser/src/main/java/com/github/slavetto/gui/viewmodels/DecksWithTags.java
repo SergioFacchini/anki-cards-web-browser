@@ -21,10 +21,6 @@ public class DecksWithTags {
         this.numCards = numCards;
     }
 
-    public String getDeckName() {
-        return deckName;
-    }
-
     public String getTags() {
         return tags;
     }

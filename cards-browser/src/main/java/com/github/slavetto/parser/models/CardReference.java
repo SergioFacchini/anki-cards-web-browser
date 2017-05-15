@@ -9,10 +9,10 @@ package com.github.slavetto.parser.models;
  * database layer from other logic.
  */
 public class CardReference {
-    private String[] fields;
-    private long id;
-    private int templateOrd;
-    private long cardModelId;
+    private final String[] fields;
+    private final long id;
+    private final int templateOrd;
+    private final long cardModelId;
 
     public CardReference(long id, long cardModelId, int templateOrd, String[] fields) {
         this.id = id;

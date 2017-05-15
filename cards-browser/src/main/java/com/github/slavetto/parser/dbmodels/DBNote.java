@@ -10,6 +10,7 @@ import com.j256.ormlite.table.DatabaseTable;
 /**
  * A database model for the column
  */
+@SuppressWarnings("ALL")
 @DatabaseTable(tableName = "notes")
 public class DBNote {
 
@@ -31,26 +32,6 @@ public class DBNote {
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getFields() {
-        return fields;
-    }
-
-    public void setFields(String fields) {
-        this.fields = fields;
-    }
-
-    public String getModelId() {
-        return modelId;
-    }
-
-    public void setModelId(String modelId) {
-        this.modelId = modelId;
     }
 
     public String getTags() {

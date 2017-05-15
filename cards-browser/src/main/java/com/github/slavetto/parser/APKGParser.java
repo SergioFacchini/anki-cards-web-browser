@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class APKGParser {
 
-    private File apgkFilePath;
+    private final File apgkFilePath;
 
     /**
      * The folder where the contents of the *.apkg file were unzipped. It's null if nothing has been unzipped.

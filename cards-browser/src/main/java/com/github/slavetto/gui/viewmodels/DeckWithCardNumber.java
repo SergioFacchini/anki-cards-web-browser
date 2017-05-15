@@ -10,7 +10,7 @@ public class DeckWithCardNumber {
     private final long deckId;
     private final long numCards;
 
-    public DeckWithCardNumber(String deckName, long deckId, long numCards) {
+    private DeckWithCardNumber(String deckName, long deckId, long numCards) {
         this.deckName = deckName;
         this.deckId = deckId;
         this.numCards = numCards;

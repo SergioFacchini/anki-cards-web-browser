@@ -13,14 +13,15 @@ public class CardTemplate {
     private static final String IMAGE_PATH_REGEX       = "(<img.+?src=\")([^\"]+)\"";
     private static final String IMAGE_PATH_REPLACEMENT = "$1anki-images/$2\"";
 
-    private String frontTemplate;
-    private String rearTemplate;
+    private final String frontTemplate;
+    private final String rearTemplate;
 
     /**
      * Position of the template in the template array. This is used by the cards to identify which of the templates of
      * the {@link CardModel} generated it.
      */
-    private int ord;
+    @SuppressWarnings({"unused", "FieldCanBeLocal"})
+    private final int ord;
 
     CardTemplate(String frontTemplate, String rearTemplate, int ord) {
         this.frontTemplate = frontTemplate;

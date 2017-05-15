@@ -46,6 +46,7 @@ public class Exporter {
         HashMap<String, String> imageNamesDictionary = parser.getImageNamesDictionary();
 
         File imagesFolder = new File(destinationFolder, "anki-images");
+        //noinspection ResultOfMethodCallIgnored
         imagesFolder.mkdirs();
 
         imageNamesDictionary.forEach((currentName, targetName) -> {
