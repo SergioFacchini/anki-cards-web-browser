@@ -3,9 +3,6 @@ package com.github.slavetto.parser.models;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 
 /*
  * Created with ♥
@@ -23,10 +20,14 @@ public class CardTemplateTest {
 //            numMatches++;
 //        }
 
-        String result = sampleText.replaceAll("(<img[^(src)]+src=\")([^\"]+)\"", "$1anki-images/$2\"");
-
+        String result = sampleText.replaceAll("(<img.+?src=\")([^\"]+)\"", "$1anki-images/$2\"");
         Assert.assertEquals(null, expectedText, result);
 
+        String sample2   = "<img class=\"latex\" src=\"latex-6a3ac365210c170e4573d6f669410f5812e87aff.png\">";
+        String expected2 = "<img class=\"latex\" src=\"anki-images/latex-6a3ac365210c170e4573d6f669410f5812e87aff.png\">";
+
+        String result2 = sample2.replaceAll("(<img.+?src=\")([^\"]+)\"", "$1anki-images/$2\"");
+        Assert.assertEquals(null, expected2, result2);
     }
 
 }
