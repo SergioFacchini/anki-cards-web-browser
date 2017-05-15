@@ -112,7 +112,11 @@ public class MainFrame extends JFrame {
                 return;
             }
 
-            Exporter exporter = new Exporter(currentParser, destinationFolder, getTagsSelectedForExport());
+
+            Exporter exporter = new Exporter(
+                    currentParser, destinationFolder,
+                    getTagsSelectedForExport(), randomizeCardsPositionsCheckBox.isSelected()
+            );
             try {
                 exporter.tryExporting();
 

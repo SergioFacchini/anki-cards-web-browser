@@ -22,7 +22,7 @@ public abstract class GeneratedDeck {
         this.deckInfo = deckInfo;
     }
 
-    JSONObject toJSON(){
+    JSONObject toJSON(boolean randomizeCardsPositions){
         /*
         {
           "name": "Calcolatori",
@@ -51,7 +51,7 @@ public abstract class GeneratedDeck {
         json.put("name", deckInfo.getName());
         json.put("hasCategories", hasCategories());
 
-        addCardsToJson(json);
+        addCardsToJson(json, randomizeCardsPositions);
 
         return json;
     }
@@ -59,8 +59,9 @@ public abstract class GeneratedDeck {
     /**
      * Adds to the json the information about the cards that have to be contained
      * @param json the json to add cards to
+     * @param randomizeCardsPositions whenever the cards of this deck must be shuffled
      */
-    protected abstract void addCardsToJson(JSONObject json);
+    protected abstract void addCardsToJson(JSONObject json, boolean randomizeCardsPositions);
 
     JSONObject calculateCardJSON(RenderedCard card) {
         JSONObject json = new JSONObject();

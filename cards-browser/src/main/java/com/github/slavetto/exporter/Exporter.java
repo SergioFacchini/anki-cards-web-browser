@@ -28,11 +28,13 @@ public class Exporter {
     private final APKGParser parser;
     private final File destinationFolder;
     private final List<DecksWithTags> tagsToExport;
+    private final boolean randomizeCardsPositions;
 
-    public Exporter(APKGParser parser, File destinationFolder, List<DecksWithTags> tagsToExport) {
+    public Exporter(APKGParser parser, File destinationFolder, List<DecksWithTags> tagsToExport, boolean randomizeCardsPositions) {
         this.parser = parser;
         this.destinationFolder = destinationFolder;
         this.tagsToExport = tagsToExport;
+        this.randomizeCardsPositions = randomizeCardsPositions;
     }
 
     public void tryExporting() throws SQLException, IOException, AnkiExpectedExportingException {
@@ -58,7 +60,7 @@ public class Exporter {
         });
     }
 
-    public void writeJsonFile(JSONObject json) throws IOException {
+    private void writeJsonFile(JSONObject json) throws IOException {
         File file = new File(destinationFolder, "decks.json");
 
         //We want the json to be hand-editable, so we set the indent factor to 2
@@ -72,7 +74,7 @@ public class Exporter {
         for (DeckInfo deckInfo : parser.getDeckInfos()) {
             GeneratedDeck generatedDeck = generateDeck(deckInfo, parser);
             if(!generatedDeck.isEmpty()) {
-                decksJson.put(generatedDeck.toJSON());
+                decksJson.put(generatedDeck.toJSON(randomizeCardsPositions));
             }
         }
         root.put("decks", decksJson);

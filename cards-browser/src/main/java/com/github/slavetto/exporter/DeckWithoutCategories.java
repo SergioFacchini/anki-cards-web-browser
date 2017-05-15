@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /*
  * Created with ♥
@@ -27,8 +28,13 @@ public class DeckWithoutCategories extends GeneratedDeck {
     }
 
     @Override
-    protected void addCardsToJson(JSONObject json) {
+    protected void addCardsToJson(JSONObject json, boolean randomizeCardsPositions) {
         JSONArray cardsJson = new JSONArray();
+
+        if (randomizeCardsPositions) {
+            Collections.shuffle(cards);
+        }
+
         cards.forEach(card -> cardsJson.put(calculateCardJSON(card)));
 
         json.put("cards", cardsJson);

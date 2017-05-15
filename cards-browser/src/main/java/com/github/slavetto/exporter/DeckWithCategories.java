@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -32,16 +33,19 @@ class DeckWithCategories extends GeneratedDeck {
     }
 
     @Override
-    protected void addCardsToJson(JSONObject json) {
+    protected void addCardsToJson(JSONObject json, boolean randomizeCardsPositions) {
         JSONArray categoriesArray = new JSONArray();
 
         ArrayList<String> tags = new ArrayList<>(tagsCards.keySet());
         tags.sort(NaturalOrderComparator.INSTANCE);
 
         tags.forEach(tag -> {
-            JSONArray cardsOfCategory = new JSONArray();
-
             ArrayList<RenderedCard> cards = tagsCards.get(tag);
+            if (randomizeCardsPositions) {
+                Collections.shuffle(cards);
+            }
+
+            JSONArray cardsOfCategory = new JSONArray();
             cards.forEach(card -> cardsOfCategory.put(calculateCardJSON(card)));
 
             JSONObject categoryObject = new JSONObject();

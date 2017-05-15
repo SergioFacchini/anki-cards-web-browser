@@ -21,7 +21,7 @@ public class EmptyDeck extends GeneratedDeck {
     }
 
     @Override
-    protected void addCardsToJson(JSONObject json) {
+    protected void addCardsToJson(JSONObject json, boolean randomizeCardsPositions) {
         throw new IllegalStateException("An empty deck must not be added to JSON!");
     }
 
