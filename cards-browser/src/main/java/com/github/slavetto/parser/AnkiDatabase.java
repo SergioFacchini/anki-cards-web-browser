@@ -178,4 +178,15 @@ class AnkiDatabase {
             );
         };
     }
+
+    /**
+     * Closes the connection to the database. Does not throws any exception if something goes wrong.
+     */
+    void close() {
+        try {
+            connectionSource.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

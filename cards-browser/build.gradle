@@ -22,9 +22,6 @@ dependencies {
     //Parsing card models and deck infos
     compile 'org.json:json:20160810'
 
-    //Signals
-    compile 'com.threerings:signals:0.3'
-
     //Stuff
     compile 'com.google.guava:guava:21.0'
 

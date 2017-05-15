@@ -8,12 +8,13 @@ import com.github.slavetto.parser.APKGParser;
 import com.github.slavetto.parser.exceptions.AnkiDatabaseNotFoundException;
 import com.github.slavetto.parser.models.DeckInfo;
 import com.github.slavetto.parser.models.DeckInfos;
-import com.threerings.signals.Signal0;
 import net.lingala.zip4j.exception.ZipException;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -23,7 +24,6 @@ import java.util.Vector;
 
 public class MainFrame extends JFrame {
     private JPanel contentPane;
-    private JButton buttonOK;
     private JTextField apkgFilePathText;
     private JButton browseForApkgFileBtn;
     private JList<DeckWithCardNumber> whatDecksList;
@@ -48,15 +48,12 @@ public class MainFrame extends JFrame {
     private JFileChooser apkgChooser;
     private JFileChooser destinationFolderChooser;
 
-    private final Signal0 onValidParserSelected = new Signal0();
-
     //Exporting options
     private File destinationFolder;
 
     private MainFrame() {
         setTitle("Anki Cards Web Browsers generator");
         setContentPane(contentPane);
-        getRootPane().setDefaultButton(buttonOK);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         //What decks to generate the browser for
@@ -101,77 +98,78 @@ public class MainFrame extends JFrame {
             }
         });
 
-        exportBtn.addActionListener(e -> {
-            if (destinationFolder == null) {
-                JOptionPane.showMessageDialog(
-                    this,
-                    "Please, choose a destination folder",
-                    "Choose a destination folder",
-                    JOptionPane.ERROR_MESSAGE
-                );
-                return;
+        exportBtn.addActionListener(e -> performExport());
+
+        //When closing the window, perform a cleanup
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                if(currentParser != null) {
+                    currentParser.clear();
+                }
             }
+        });
+    }
 
-
-            Exporter exporter = new Exporter(
-                    currentParser, destinationFolder,
-                    getTagsSelectedForExport(), randomizeCardsPositionsCheckBox.isSelected()
+    private void performExport() {
+        if (destinationFolder == null) {
+            JOptionPane.showMessageDialog(
+                this,
+                "Please, choose a destination folder",
+                "Choose a destination folder",
+                JOptionPane.ERROR_MESSAGE
             );
-            try {
-                exporter.tryExporting();
+            return;
+        }
 
-                JOptionPane.showMessageDialog(
-                        this,
-                        "The browser was generated correctly!",
-                        "Browser generated",
-                        JOptionPane.INFORMATION_MESSAGE
-                );
 
-                //Opening the export folder
-                Desktop.getDesktop().open(destinationFolder);
+        Exporter exporter = new Exporter(
+                currentParser, destinationFolder,
+                getTagsSelectedForExport(), randomizeCardsPositionsCheckBox.isSelected()
+        );
+        try {
+            exporter.tryExporting();
 
-            } catch (SQLException e1) {
-                e1.printStackTrace();
-                JOptionPane.showMessageDialog(
-                        this,
-                        "A database error occurred when trying to generate the browser.\n" +
-                                 "Please check that the apgk file is not damaged. If necessary try to re-export it, " +
-                                 "then retry.",
-                        "A database error occurred",
-                        JOptionPane.ERROR_MESSAGE
-                );
-            } catch (IOException|AnkiExpectedExportingException e1) {
-                e1.printStackTrace();
-                JOptionPane.showMessageDialog(
-                        this,
-                        "An error occurred when writing the browser.\n" +
-                                 "Please check that the folder you supplied is valid and writable. If necessary, " +
-                                 "change the folder and retry.",
-                        "A file error occurred",
-                        JOptionPane.ERROR_MESSAGE
-                );
-            } catch (Exception e1) {
-                e1.printStackTrace();
-                JOptionPane.showMessageDialog(
-                        this,
-                        "An unknown error occurred when writing the browser.\nHere are the technical details:\n" +
-                                 e1.getMessage(),
-                        "A very bad error occurred.",
-                        JOptionPane.ERROR_MESSAGE
-                );
-            }
-        });
+            JOptionPane.showMessageDialog(
+                    this,
+                    "The browser was generated correctly!",
+                    "Browser generated",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
 
-        //Self listeners
-        onValidParserSelected.connect(() -> { //Decks counter
-            isFirstSetupInProgress = true;
+            //Opening the export folder
+            Desktop.getDesktop().open(destinationFolder);
 
-            fetchCardCount();
-            fetchDeckNames();
-            fetchTagsOfSelectedDecks();
-
-            isFirstSetupInProgress = false;
-        });
+        } catch (SQLException e1) {
+            e1.printStackTrace();
+            JOptionPane.showMessageDialog(
+                    this,
+                    "A database error occurred when trying to generate the browser.\n" +
+                             "Please check that the apgk file is not damaged. If necessary try to re-export it, " +
+                             "then retry.",
+                    "A database error occurred",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        } catch (IOException |AnkiExpectedExportingException e1) {
+            e1.printStackTrace();
+            JOptionPane.showMessageDialog(
+                    this,
+                    "An error occurred when writing the browser.\n" +
+                             "Please check that the folder you supplied is valid and writable. If necessary, " +
+                             "change the folder and retry.",
+                    "A file error occurred",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        } catch (Exception e1) {
+            e1.printStackTrace();
+            JOptionPane.showMessageDialog(
+                    this,
+                    "An unknown error occurred when writing the browser.\nHere are the technical details:\n" +
+                             e1.getMessage(),
+                    "A very bad error occurred.",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
     }
 
     private void onDestinationFolderSelected(File destinationFolder) {
@@ -194,7 +192,7 @@ public class MainFrame extends JFrame {
         }
 
 
-        whatCategoriesList.setModel(new DefaultComboBoxModel<DecksWithTags>(new Vector<>(deckTags)));
+        whatCategoriesList.setModel(new DefaultComboBoxModel<>(new Vector<>(deckTags)));
         whatCategoriesList.setSelectionInterval(0, deckTags.size() - 1);
     }
 
@@ -227,7 +225,7 @@ public class MainFrame extends JFrame {
                 }
             }
 
-            whatDecksList.setModel(new DefaultComboBoxModel<DeckWithCardNumber>(new Vector<>(decksForList)));
+            whatDecksList.setModel(new DefaultComboBoxModel<>(new Vector<>(decksForList)));
             whatDecksList.setSelectionInterval(0, decksForList.size() - 1);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -248,7 +246,7 @@ public class MainFrame extends JFrame {
         try {
             currentParser.tryOpenFile();
 
-            onValidParserSelected.dispatch();
+            onValidParserSelected();
         } catch (ZipException | SQLException | IOException | AnkiDatabaseNotFoundException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(
@@ -263,6 +261,16 @@ public class MainFrame extends JFrame {
             currentParser.clear();
             currentParser = null;
         }
+    }
+
+    private void onValidParserSelected() {
+        isFirstSetupInProgress = true;
+
+        fetchCardCount();
+        fetchDeckNames();
+        fetchTagsOfSelectedDecks();
+
+        isFirstSetupInProgress = false;
     }
 
     public static void main(String[] args) {

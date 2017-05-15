@@ -3,6 +3,7 @@ package com.github.slavetto.parser;
 import com.github.slavetto.parser.exceptions.AnkiDatabaseNotFoundException;
 import com.github.slavetto.parser.exceptions.DatabaseInconsistentException;
 import com.github.slavetto.parser.models.*;
+import com.github.slavetto.utils.FileUtils;
 import com.google.common.io.Files;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
@@ -129,7 +130,14 @@ public class APKGParser {
      * Closes the connection to the database and removes all the temporary files
      */
     public void clear() {
-        //TODO:
+        database.close();
+
+        //Removing temporary files:
+        try {
+            FileUtils.removeAllRecursively(unzippedToFolder);
+        } catch (Exception e) {
+            //We couldn't clear the temp files. The OS will do this for us
+        }
     }
 
     public long getNumCardsInAllDecks() throws SQLException {
