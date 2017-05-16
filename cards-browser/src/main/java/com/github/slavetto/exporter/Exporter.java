@@ -4,13 +4,17 @@ import com.github.slavetto.gui.viewmodels.DecksWithTags;
 import com.github.slavetto.parser.APKGParser;
 import com.github.slavetto.parser.models.CardModel;
 import com.github.slavetto.parser.models.DeckInfo;
+import com.github.slavetto.utils.FileUtils;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import res.Resources;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +44,20 @@ public class Exporter {
     public void tryExporting() throws SQLException, IOException, AnkiExpectedExportingException {
         writeJsonFile(generateDataJson());
         moveAndRenameImageFiles();
+        addStaticFiles();
+    }
+
+    /**
+     * Adds the index and the relative javascript files to the folder.
+     */
+    private void addStaticFiles() throws IOException {
+        URL resourceFolderURL = Resources.class.getResource("data/");
+        try {
+            File resourceFolder = new File(resourceFolderURL.toURI());
+            FileUtils.copyAllRecursively(resourceFolder, destinationFolder, true);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException("Cannot retrieve the folder of the static files!");
+        }
     }
 
     private void moveAndRenameImageFiles() throws AnkiExpectedExportingException {

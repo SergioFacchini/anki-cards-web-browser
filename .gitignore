@@ -38,5 +38,6 @@ untitled2/
 cards-browser/.gradle/
 cards-browser/build/
 .idea/*iws
-.idea/workspace.xml
 .idea/tasks.xml
+
+decks.json
