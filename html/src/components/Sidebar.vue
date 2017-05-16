@@ -240,8 +240,8 @@
 
     .select-deck {
         font-size: 24px;
-        width: calc(#{$sidebarWidth} - 32px);
-        max-width: calc(#{$sidebarWidth} - 32px);
+        width: 100%;
+        max-width: 100%;
         border-radius: 0;
         padding-left: 8px;
         -webkit-appearance: none;
