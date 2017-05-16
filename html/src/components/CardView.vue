@@ -1,7 +1,8 @@
 <template>
     <div class="card-view">
         <!-- Counter -->
-        <div v-if="cards" class="card-counter">Card {{ cardIndex + 1}} of {{ cards.length }}</div>
+        <div v-if="card.categoryName" class="etiquette category-name">{{ card.categoryName }}</div>
+        <div v-if="cards" class="etiquette card-counter">Card {{ cardIndex + 1}} of {{ cards.length }}</div>
 
         <!-- Card container -->
         <div class="card-container">
@@ -51,13 +52,21 @@
         padding: 8px;
     }
 
-    .card-counter {
+    .etiquette {
+        position: absolute;
         background-color: black;
         color: white;
         font-size: 12pt;
-        position: absolute;
         width: initial;
-        right: 0;
         padding: 4px;
     }
+
+    .card-counter {
+        right: 0;
+    }
+
+    .category-name {
+        left: 0;
+    }
+
 </style>

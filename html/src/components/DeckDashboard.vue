@@ -3,10 +3,14 @@
         <div v-if="currentCard" class="card-and-controls">
             <!-- Over the card -->
             <div class="over-card">
-                <h2>{{ currentCard.deck.name }}</h2>
+                <h2 v-if="session">{{ currentCard.deck.name }}</h2>
                 <p v-if="session && currentCard.deck.hasCategories">({{ selectedCategoriesCount }} of {{
                     currentCard.deck.categories.length }}
                     categories selected)</p>
+                <p v-if="!session">
+                    You're currently viewing only one card from the deck "{{ currentCard.deck.name }}"!<br>
+                    If you want to see other cards from the deck, check the sidebar on the left.
+                </p>
             </div>
 
             <!-- Card -->

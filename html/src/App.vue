@@ -43,7 +43,6 @@
                 .then(data => {
                     // Add properties to the card
                     data.decks.forEach(deck => {
-                        let cards;
                         if (deck.hasCategories) {
                             deck.categories.forEach(category => {
                                 category.cards.forEach(card => {
@@ -52,6 +51,8 @@
 
                                     // Attach deck
                                     card.deck = deck;
+
+                                    card.categoryName = category.categoryName || "(no category)";
                                 });
                             });
                         } else {
