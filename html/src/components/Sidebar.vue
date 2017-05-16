@@ -3,7 +3,8 @@
 
         <div  v-if="session">
             <div class="session-info">
-                <button class="full-width" @click="stopSession">Take a break</button>
+                <h3>Wanna take a break?</h3>
+                <button class="full-width" @click="stopSession">Stop</button>
             </div>
         </div>
 
@@ -158,7 +159,7 @@
                 const deck = this.selectedDeck;
                 const info = {
                     deck,
-                    randomize: this.randomize
+                    randomize: this.randomizeCards
                 };
 
                 if (deck.hasCategories) {
