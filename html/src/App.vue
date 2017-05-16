@@ -38,7 +38,7 @@
         mounted () {
             // Download decks
             // TODO: Refactor
-            Vue.http.get('/decks.json')
+            Vue.http.get('decks.json')
                 .then(response => response.json())
                 .then(data => {
                     // Add properties to the card
