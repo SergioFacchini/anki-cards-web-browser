@@ -125,6 +125,6 @@
     }
 
     button:disabled {
-        background-color: #555555;
+        background-color: #636363;
     }
 </style>

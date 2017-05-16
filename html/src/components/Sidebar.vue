@@ -214,12 +214,12 @@
         z-index: 1;
 
         width: calc(#{$sidebarWidth} - 32px);
-        height: calc(100vh - #{$topbarHeightWithPadding} - 8px - 16px);
+        height: calc(100vh - #{$topbarHeightWithPadding} - 8px - 32px);
         background-color: #404040;
         float: left;
         padding: 8px 16px 32px 16px;
 
-        overflow-y: scroll;
+        overflow-y: auto;
 
         -webkit-transition: transform 0.2s ease 0s;
         transition: transform 0.2s ease 0s;
@@ -233,7 +233,9 @@
 
     .sidebar h3 {
         font-size: 28px;
-        padding-top: 16px;
+        padding-top: 0;
+        margin-top: 24px;
+        margin-bottom: 10px;
         text-align: center;
         color: white;
     }
@@ -250,7 +252,7 @@
 
     .category-list-container {
         max-height: 380px;
-        overflow-y: scroll;
+        overflow-y: auto;
         font-size: 18px;
         color: white;
         border: solid 2px #555555;
@@ -305,6 +307,10 @@
         width: 2em;
         height: 2em;
         vertical-align: middle;
+    }
+
+    #start-study-button {
+        margin-bottom: 12px;
     }
 
     #start-study-button:disabled {
