@@ -140,7 +140,10 @@
             startSession (info) {
                 console.log('[DeckDashboard] Start new session', info);
 
-                this.selectedCategoriesCount = info.selectedCategories.length;
+                if (info.deck.hasCategories) {
+                    //Note: we show categories count only for decks that have them
+                    this.selectedCategoriesCount = info.selectedCategories.length;
+                }
 
                 // Create an array of current cards
                 if (info.deck.hasCategories) {
