@@ -207,7 +207,7 @@
         text-align: center;
     }
 
-    .deck-dashboard div {
+    .deck-dashboard > div {
         width: 100%;
         font-size: 24px;
     }

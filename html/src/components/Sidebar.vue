@@ -49,7 +49,7 @@
 
             <!-- Start to study button -->
             <div v-if="!session">
-                <button class="full-width" :disabled="!canStart" @click="start">Start studying</button>
+                <button id="start-study-button" class="full-width" :disabled="!canStart" @click="start">Start studying</button>
             </div>
         </div>
 
@@ -217,7 +217,7 @@
         height: calc(100vh - #{$topbarHeightWithPadding} - 8px - 16px);
         background-color: #404040;
         float: left;
-        padding: 8px 16px 16px 16px;
+        padding: 8px 16px 32px 16px;
 
         overflow-y: scroll;
 
@@ -252,9 +252,8 @@
         max-height: 380px;
         overflow-y: scroll;
         font-size: 18px;
-        background-color: white;
         color: white;
-        border: solid 1px slategray;
+        border: solid 2px #555555;
     }
 
     .category-list {
@@ -305,5 +304,11 @@
     .preferences-container input {
         width: 2em;
         height: 2em;
+        vertical-align: middle;
     }
+
+    #start-study-button:disabled {
+        text-decoration: line-through;
+    }
+
 </style>

@@ -97,7 +97,7 @@
         background-color: #bfbfbf; /* HAck to fix the bug when something overflows */
     }
 
-    * {
+    html, button {
         font-family: 'Lato', "Lucida Sans Unicode", "Lucida Grande", Sans-Serif, serif;
     }
 
@@ -125,6 +125,6 @@
     }
 
     button:disabled {
-        background-color: lightgray;
+        background-color: #555555;
     }
 </style>
