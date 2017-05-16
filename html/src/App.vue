@@ -128,4 +128,10 @@
     button:disabled {
         background-color: #636363;
     }
+
+    /* For some reason, this does not gets imported in CardViewer, so we put it here. */
+    .card img {
+        max-width: 100%;
+        box-sizing: border-box;
+    }
 </style>
