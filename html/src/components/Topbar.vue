@@ -54,7 +54,6 @@
         display: inline-block;
         float: left;
         margin-right: 8px;
-        /*margin-top: 6px;*/
         border-radius: 10px;
     }
 
@@ -78,7 +77,7 @@
         top: 16px;
     }
 
-    @media (min-width: 480px) {
+    @media (min-width: 800px) {
         .toggle-sidebar-icon {
             display: none;
         }

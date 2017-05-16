@@ -106,7 +106,7 @@
         height: calc(100vh - #{$topbarHeightWithPadding});
     }
 
-    @media (min-width: 480px) {
+    @media (min-width: 800px) {
         .main {
             margin-left: $sidebarWidth;
             width: calc(100% - #{$sidebarWidth});

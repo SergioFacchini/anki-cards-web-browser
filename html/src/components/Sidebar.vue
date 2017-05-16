@@ -225,7 +225,7 @@
         transition: transform 0.2s ease 0s;
     }
 
-    @media (max-width: 480px) {
+    @media (max-width: 799px) {
         .closed {
             transform: translateX(#{-$sidebarWidth});
         }
