@@ -40,6 +40,35 @@
             Vue.http.get('/decks.json')
                 .then(response => response.json())
                 .then(data => {
+                    // Add properties to the card
+                    data.decks.forEach(deck => {
+                        let cards;
+                        if (deck.hasCategories) {
+                            deck.categories.forEach(category => {
+                                category.cards.forEach(card => {
+                                    // Attach style
+                                    card.style = data.cardTypes[card.typeId];
+
+                                    // Attach deck
+                                    card.deck = deck;
+                                });
+                            });
+                        } else {
+                            deck.cards.forEach(card => {
+                                // Attach style
+                                card.style = data.cardTypes[card.typeId];
+
+                                // Attach deck
+                                card.deck = deck;
+                            });
+                        }
+
+                        console.log("Con stile", cards);
+                    });
+
+                    return data;
+                })
+                .then(data => {
                     this.decks = data.decks;
                     this.cardTypes = data.cardTypes;
 
@@ -60,6 +89,7 @@
 
     body {
         margin: 0;
+        background-color: #bfbfbf; /* HAck to fix the bug when something overflows */
     }
 
     * {
@@ -68,6 +98,7 @@
 
     .main {
         width: 100%;
+        height: calc(100vh - 78px);
     }
 
     @media (min-width: 480px) {
@@ -75,5 +106,20 @@
             margin-left: $sidebarWidth;
             width: calc(100% - #{$sidebarWidth});
         }
+    }
+
+    button {
+        height: 48px;
+        font-size: 24px;
+        margin-top: 32px;
+        background-color: #1C1C1C;
+        color: white;
+        border: none;
+        padding: 4px 16px;
+        cursor: pointer;
+    }
+
+    button:disabled {
+        background-color: lightgray;
     }
 </style>

@@ -1,43 +1,44 @@
 <template>
     <div class="deck-dashboard">
-
-        <!-- Card container -->
-        <div class="card-container">
-            <!-- If there is a current card -->
-            <div v-if="currentCard" ref="cardContainer">
-                <!-- div which contains the card html -->
-                <div class="card-html-container card" v-html="currentCard[side] + currentStyle"></div>
-
-                <!-- Counter of card in the bottom right corner -->
-                <div v-if="session" class="card-counter">{{ cardIndex }} / {{ cards.length }}</div>
+        <div v-if="currentCard" class="card-and-controls">
+            <!-- Over the card -->
+            <div class="over-card">
+                <h2>{{ currentCard.deck.name }}</h2>
+                <p v-if="session && currentCard.deck.hasCategories">({{ selectedCategoriesCount }} of {{ currentCard.deck.categories.length }}
+                     categories selected)</p>
             </div>
 
-            <!-- No current card -->
-            <div v-else class="no-deck">
-                <div class="card-html-container">
-                    <p>Seleziona un mazzo e premi Studia!</p>
-                </div>
+            <!-- Card -->
+            <card-view :card="currentCard" :side="side" :card-index="cardIndex" :cards="cards"></card-view>
+
+            <!-- Row with controls -->
+            <div class="control-row">
+                <button class="previous" @click="previous" :disabled="!canGoToPrevious">&lt;</button>
+                <button class="center-control" v-if="side == 'front'" @click="showAnswer" :disabled="!isCardDisplayed">
+                    Show
+                </button>
+                <button class="center-control" v-if="side == 'rear'" @click="next" :disabled="!canGoToNext">Next
+                </button>
+                <button class="next" @click="next" :disabled="!canGoToNext">&gt;</button>
             </div>
         </div>
-
-        <!-- Row with controls -->
-        <div class="control-row">
-            <button class="previous" @click="previous" :disabled="!canGoToPrevious">&lt;</button>
-            <button class="center-control" v-if="side == 'front'" @click="showAnswer" :disabled="!isCardDisplayed">
-                mostra
-            </button>
-            <button class="center-control" v-if="side == 'rear'" @click="next" :disabled="!canGoToNext">prossima
-            </button>
-            <button class="next" @click="next" :disabled="!canGoToNext">&gt;</button>
+        <div v-else class="no-session">
+            <i class="material-icons">keyboard_arrow_left</i>
+            <p>Pick a deck from the sidebar</p>
         </div>
     </div>
 </template>
 <script>
+    import CardView from './CardView.vue';
     import EventBus from '../EventBus';
     import Utils from '../Utils';
 
     export default {
         props: ['cardTypes'],
+
+        components: {
+            CardView
+        },
 
         data () {
             return {
@@ -45,6 +46,7 @@
                 currentCard: null,
 
                 session: false,
+                selectedCategoriesCount: -1,
 
                 // Index of the current card in the cards array
                 cardIndex: -1,
@@ -79,6 +81,7 @@
 
                     if (card != null) {
                         this.showCard(card);
+                        EventBus.$emit('closeSidebar');
                     }
                 }
             });
@@ -102,15 +105,6 @@
              */
             isCardDisplayed () {
                 return this.currentCard != null;
-            },
-
-            /**
-             * Returns the style of the current card. The css is wrapped by the start and end of the style tag
-             * @returns {string} Css string of current card, null if no card is displayed
-             */
-            currentStyle () {
-                const cardCss = this.cardTypes[this.currentCard.typeId].css;
-                return '<style>' + cardCss + '</style>';
             }
         },
         methods: {
@@ -120,6 +114,8 @@
              */
             startSession (info) {
                 console.log('[DeckDashboard] Start new session', info);
+
+                this.selectedCategoriesCount = info.selectedCategories.length;
 
                 // Create an array of current cards
                 if (info.deck.hasCategories) {
@@ -176,33 +172,34 @@
     .deck-dashboard {
         width: calc(100% - 32px);
         padding: 16px;
-        height: calc(100vh - 48px);
-        background-color: slategray;
+        height: calc(100% - 32px);
+        background-color: #bfbfbf;
+        text-align: center;
     }
 
-    .card-container {
-        position: relative;
+    .deck-dashboard div {
         width: 100%;
-        height: 70vh;
-        background-color: white;
-        border-radius: 25px;
+        font-size: 24px;
     }
 
-    .card {
-        border-radius: 25px;
-        overflow-y: scroll;
+    .no-session i {
+        font-size: 256px;
     }
 
-    .card img {
-        max-width: 100%;
+    .over-card h2 {
+        margin: 8px;
+        font-size: 24px;
     }
 
-    .card-counter {
-        position: absolute;
-        bottom: 16px;
-        right: 16px;
-        font-size: 32px;
-        color: lightgray;
+    .over-card p {
+        margin: 4px;
+        font-size: 18px;
+    }
+
+    .card-and-controls {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
     }
 
     .control-row {
@@ -212,21 +209,11 @@
     }
 
     .control-row button {
-        text-transform: uppercase;
-        display: inline-block;
-        color: white;
-        background-color: black;
-        font-size: 32px;
-        border-radius: 10px;
         flex-grow: 1;
     }
 
-    .control-row button:disabled {
-        background-color: lightgray;
-    }
-
-    .card-html-container {
-        padding: 32px;
-        font-size: 32px;
+    .center-control {
+        margin-left: 16px;
+        margin-right: 16px;
     }
 </style>

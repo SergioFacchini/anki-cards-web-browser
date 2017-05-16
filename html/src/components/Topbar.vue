@@ -8,7 +8,7 @@
         </div>
 
         <!-- App title -->
-        <h1 class="app-title">Anki</h1>
+        <h1 class="app-title">Anki Cards Web Browser</h1>
     </div>
 </template>
 <script>
@@ -26,10 +26,13 @@
         }
     }
 </script>
-<style>
+<style lang="scss" scoped>
+
+    @import "../style-settings.scss";
+
     .topbar {
-        background-color: gray;
-        height: 32px;
+        background-color: black;
+        height: $topbarHeight;
         width: calc(100% - 16px);
 
         padding: 8px;
@@ -40,26 +43,26 @@
         font-size: 24px;
         color: white;
         margin-top: 0;
-        padding-top: 4px;
+        padding-top: 16px;
+        text-align: center;
     }
 
     .toggle-sidebar-icon {
         position: relative;
         height: 32px;
         width: 32px;
-        background-color: darkgray;
         display: inline-block;
         float: left;
         margin-right: 8px;
+        margin-top: 12px;
         border-radius: 10px;
     }
 
     .toggle-sidebar-icon span {
         width: 24px;
         height: 4px;
-        background-color: black;
-        margin: 4px;
-        border-radius: 2px;
+        background-color: white;
+        margin: 5px;
         position: absolute;
     }
 
