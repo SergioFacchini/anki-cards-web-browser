@@ -52,6 +52,10 @@
         padding: 8px;
     }
 
+    .card img {
+        max-width: 100%;
+    }
+
     .etiquette {
         position: absolute;
         background-color: black;
