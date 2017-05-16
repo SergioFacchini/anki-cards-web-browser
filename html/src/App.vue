@@ -98,7 +98,7 @@
     }
 
     * {
-        font-family: 'Roboto', "Lucida Sans Unicode", "Lucida Grande", Sans-Serif, serif;
+        font-family: 'Lato', "Lucida Sans Unicode", "Lucida Grande", Sans-Serif, serif;
     }
 
     .main {

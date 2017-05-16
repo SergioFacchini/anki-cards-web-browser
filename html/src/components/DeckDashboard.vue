@@ -14,17 +14,29 @@
 
             <!-- Row with controls -->
             <div class="control-row">
+                <!-- Previous -->
                 <button class="previous" @click="previous" :disabled="!canGoToPrevious">&lt;</button>
+
+                <!-- Start center -->
+                <!-- Show answer -->
                 <button class="center-control" v-if="side == 'front'" @click="showAnswer" :disabled="!isCardDisplayed">
                     Show
                 </button>
-                <button class="center-control" v-if="side == 'rear'" @click="next" :disabled="!canGoToNext">Next
+                <!-- Next on center -->
+                <button class="center-control" v-if="side == 'rear' && !last" @click="next" :disabled="!canGoToNext">Next
                 </button>
+
+                <!-- End -->
+                <button class="center-control" v-if="side == 'rear' && last" @click="end">End
+                </button>
+                <!-- End center -->
+
+                <!-- Next -->
                 <button class="next" @click="next" :disabled="!canGoToNext">&gt;</button>
             </div>
         </div>
         <div v-else class="no-session">
-            <i class="material-icons">keyboard_arrow_left</i>
+            <i class="material-icons" @click="openSidebar">keyboard_arrow_left</i>
             <p>Pick a deck from the sidebar</p>
         </div>
     </div>
@@ -97,7 +109,7 @@
                 return this.cards != null && this.cardIndex > 0;
             },
             canGoToNext () {
-                return this.cards != null && this.cardIndex < this.cards.length;
+                return this.cards != null && (this.cardIndex + 1) < this.cards.length;
             },
 
             /**
@@ -106,6 +118,14 @@
              */
             isCardDisplayed () {
                 return this.currentCard != null;
+            },
+
+            /**
+             * This method checks if the current card is the last of a session. If only the card
+             * is shown and we are not in a session, the card is not the last.
+             */
+            last () {
+                return this.session && (this.cardIndex + 1) >= this.cards.length;
             }
         },
         methods: {
@@ -164,6 +184,15 @@
 
             next () {
                 this.showCardAt(this.cardIndex + 1);
+            },
+
+            openSidebar (evt) {
+                evt.stopPropagation();
+                EventBus.$emit('openSidebar');
+            },
+
+            end () {
+                EventBus.$emit('stop');
             }
         }
     }
@@ -199,20 +228,19 @@
 
     .card-and-controls {
         height: 100%;
-        max-height: calc(100% - 32px);
+        max-height: 100%;
         display: flex;
         flex-direction: column;
     }
 
     .control-row {
-        padding-top: 16px;
         display: flex;
         justify-content: space-around;
-        padding-bottom: 8px;
     }
 
     .control-row button {
         flex-grow: 1;
+        margin-bottom: 8px;
     }
 
     .center-control {

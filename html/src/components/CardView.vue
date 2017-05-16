@@ -1,13 +1,13 @@
 <template>
     <div class="card-view">
         <!-- Counter -->
-        <div v-if="cards" class="card-counter">Card {{ cardIndex }} of {{ cards.length }}</div>
+        <div v-if="cards" class="card-counter">Card {{ cardIndex + 1}} of {{ cards.length }}</div>
 
         <!-- Card container -->
         <div class="card-container">
 
             <!-- div which contains the card html -->
-            <div class="card-html-container card" v-html="card[side] + currentStyle"></div>
+            <div class="card" v-html="card[side] + currentStyle"></div>
         </div>
     </div>
 </template>
@@ -21,7 +21,6 @@
              * @returns {string} Css string of current card, null if no card is displayed
              */
             currentStyle () {
-                console.log(this.card);
                 return '<style>' + this.card.style.css + '</style>';
             }
         }
@@ -32,28 +31,24 @@
         position: relative;
         flex-grow: 1;
         margin-top: 25px;
-        overflow-y: scroll;
+        margin-bottom: 8px;
     }
 
     .card-container {
-        position: relative;
+        position: absolute;
+        height: 100%;
+        max-height: 100%;
         width: 100%;
         background-color: white;
         margin-top: 25px;
-    }
-
-    .card {
-        width: calc(100% - 64px);
         overflow-y: scroll;
     }
 
-    .card img {
-        max-width: 100%;
-    }
-
-    .card-html-container {
-        padding: 32px;
-        font-size: 32px;
+    .card {
+        width: calc(100% - 16px);
+        font-size: 0.8em !important; /* Override font-size in the card style*/
+        flex-grow: 1;
+        padding: 8px;
     }
 
     .card-counter {

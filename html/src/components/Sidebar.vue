@@ -1,8 +1,15 @@
 <template>
     <div class="sidebar" ref="sidebar">
 
+        <div  v-if="session">
+            <div class="session-info">
+                <button class="full-width" @click="stopSession">Take a break</button>
+            </div>
+        </div>
+
         <!-- Container of the session choices -->
-        <div class="session-setup" v-if="decks != null">
+        <div class="session-setup" v-else="decks != null">
+
 
             <!-- Select deck -->
             <h3>Select a deck to study</h3>
@@ -44,9 +51,6 @@
             <div v-if="!session">
                 <button class="full-width" :disabled="!canStart" @click="start">Start studying</button>
             </div>
-            <div class="session-info" v-else>
-                <button class="full-width" @click="stopSession">Stop</button>
-            </div>
         </div>
 
         <!-- Show loading message -->
@@ -82,6 +86,7 @@
             // Register the listener for the event that other components emit to toggle the sidebar
             EventBus.$on('toggleSidebar', () => this.toggleSidebar());
             EventBus.$on('closeSidebar', () => this.closeSidebar());
+            EventBus.$on('openSidebar', () => this.openSidebar());
 
             EventBus.$on('downloadCompleted', (data) => {
                 this.decks = data.decks;
@@ -89,6 +94,8 @@
                 // Select the first deck
                 this.selectedDeck = data.decks[0];
             });
+
+            EventBus.$on('stop', () => this.session = false);
         },
 
         computed: {
@@ -137,6 +144,11 @@
                 }
             },
 
+            openSidebar(){
+                const classes = this.$refs.sidebar.classList;
+                classes.remove('closed');
+            },
+
             /**
              * Start the session. This method emit the global event 'start' with an object that includes
              * the selected deck, the randomize flag and, if the dack has them, the array of categories (objects, not stirngs)
@@ -164,7 +176,6 @@
             },
 
             stopSession () {
-                this.session = false;
                 EventBus.$emit('stop');
             },
 
@@ -198,16 +209,15 @@
 
     @import "../style-settings.scss";
 
-
     .sidebar {
         position: absolute;
         z-index: 1;
 
         width: calc(#{$sidebarWidth} - 32px);
-        height: calc(100vh - #{$topbarHeightWithPadding} - #{$doublePadding});
+        height: calc(100vh - #{$topbarHeightWithPadding} - 8px - 16px);
         background-color: #404040;
         float: left;
-        padding: 8px 16px;
+        padding: 8px 16px 16px 16px;
 
         overflow-y: scroll;
 
@@ -239,7 +249,6 @@
     }
 
     .category-list-container {
-        height: 200px;
         max-height: 380px;
         overflow-y: scroll;
         font-size: 18px;
