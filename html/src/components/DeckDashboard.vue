@@ -88,15 +88,13 @@
             EventBus.$on('downloadCompleted', (data) => {
 
                 // Check if in the url there is a card id
-                const path = location.pathname;
+                const path = location.hash;
                 if (path.length > 1) {
-                    // Remove slash
-                    const id = path.replace('/', '');
+                    const id = path.replace('#', ''); // Remove hash
 
                     // Check if we have the card with this id
                     const card = Utils.getCardInDecksById(data.decks, id);
-
-                    if (card != null) {
+                    if (card !== null) {
                         this.showCard(card);
                         EventBus.$emit('closeSidebar');
                     }
@@ -178,7 +176,9 @@
                 this.side = 'front';
 
                 // Update the url
-                window.history.replaceState(null, null, card != null ? card.id : '');
+                if (card !== null) {
+                    window.history.replaceState(null, null, "#"+card.id);
+                }
             },
 
             previous () {
