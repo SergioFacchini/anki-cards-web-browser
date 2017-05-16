@@ -31,7 +31,7 @@
     .card-view {
         position: relative;
         flex-grow: 1;
-        margin-top: 24px;
+        margin-top: 25px;
         overflow-y: scroll;
     }
 
@@ -39,6 +39,7 @@
         position: relative;
         width: 100%;
         background-color: white;
+        margin-top: 25px;
     }
 
     .card {
@@ -61,7 +62,6 @@
         font-size: 12pt;
         position: absolute;
         width: initial;
-        top: -25px;
         right: 0;
         padding: 4px;
     }

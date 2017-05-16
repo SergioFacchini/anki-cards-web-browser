@@ -33,9 +33,9 @@
     .topbar {
         background-color: black;
         height: $topbarHeight;
-        width: calc(100% - 16px);
+        width: calc(100% - #{$doublePadding});
 
-        padding: 8px;
+        padding: $generalPadding;
     }
 
     .app-title {
@@ -43,7 +43,7 @@
         font-size: 24px;
         color: white;
         margin-top: 0;
-        padding-top: 16px;
+        padding-top: 4px;
         text-align: center;
     }
 
@@ -54,7 +54,7 @@
         display: inline-block;
         float: left;
         margin-right: 8px;
-        margin-top: 12px;
+        /*margin-top: 6px;*/
         border-radius: 10px;
     }
 

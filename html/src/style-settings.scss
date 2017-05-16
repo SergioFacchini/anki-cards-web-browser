@@ -1,2 +1,6 @@
-$topbarHeight: 62px;
+$topbarHeight: 32px;
+$generalPadding: 8px;
+$doublePadding: $generalPadding * 2;
+$topbarHeightWithPadding: $topbarHeight + ($generalPadding * 2);
+
 $sidebarWidth: 320px;

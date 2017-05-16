@@ -198,12 +198,13 @@
 
     @import "../style-settings.scss";
 
+
     .sidebar {
         position: absolute;
         z-index: 1;
 
         width: calc(#{$sidebarWidth} - 32px);
-        height: calc(100vh - 78px - 16px);
+        height: calc(100vh - #{$topbarHeightWithPadding} - #{$doublePadding});
         background-color: #404040;
         float: left;
         padding: 8px 16px;
@@ -292,4 +293,8 @@
         color: white;
     }
 
+    .preferences-container input {
+        width: 2em;
+        height: 2em;
+    }
 </style>

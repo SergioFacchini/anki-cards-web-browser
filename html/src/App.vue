@@ -7,7 +7,7 @@
         <sidebar></sidebar>
 
         <!-- Main area -->
-        <div class="main">
+        <div class="main" @click="clickMain">
             <!-- Card dashboard -->
             <deck-dashboard :card-types="cardTypes"></deck-dashboard>
         </div>
@@ -37,6 +37,7 @@
 
         mounted () {
             // Download decks
+            // TODO: Refactor
             Vue.http.get('/decks.json')
                 .then(response => response.json())
                 .then(data => {
@@ -62,8 +63,6 @@
                                 card.deck = deck;
                             });
                         }
-
-                        console.log("Con stile", cards);
                     });
 
                     return data;
@@ -79,6 +78,12 @@
                     console.error(error);
                     alert("Non riesco a caricare le carte ...");
                 });
+        },
+
+        methods: {
+            clickMain () {
+                EventBus.$emit('closeSidebar');
+            }
         }
     }
 </script>
@@ -98,7 +103,7 @@
 
     .main {
         width: 100%;
-        height: calc(100vh - 78px);
+        height: calc(100vh - #{$topbarHeightWithPadding});
     }
 
     @media (min-width: 480px) {

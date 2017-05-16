@@ -4,8 +4,9 @@
             <!-- Over the card -->
             <div class="over-card">
                 <h2>{{ currentCard.deck.name }}</h2>
-                <p v-if="session && currentCard.deck.hasCategories">({{ selectedCategoriesCount }} of {{ currentCard.deck.categories.length }}
-                     categories selected)</p>
+                <p v-if="session && currentCard.deck.hasCategories">({{ selectedCategoriesCount }} of {{
+                    currentCard.deck.categories.length }}
+                    categories selected)</p>
             </div>
 
             <!-- Card -->
@@ -198,6 +199,7 @@
 
     .card-and-controls {
         height: 100%;
+        max-height: calc(100% - 32px);
         display: flex;
         flex-direction: column;
     }
@@ -206,6 +208,7 @@
         padding-top: 16px;
         display: flex;
         justify-content: space-around;
+        padding-bottom: 8px;
     }
 
     .control-row button {
