@@ -1,7 +1,7 @@
 <template>
     <div class="sidebar" ref="sidebar">
 
-        <div  v-if="session">
+        <div v-if="session">
             <div class="session-info">
                 <h3>Wanna take a break?</h3>
                 <button class="full-width" @click="stopSession">Stop</button>
@@ -16,7 +16,8 @@
             <h3>Select a deck to study</h3>
             <div class="select-deck-container">
                 <div>
-                    <select class="select-deck" v-model="selectedDeck" :disabled="session">
+                    <select class="select-deck" v-model="selectedDeck" @change="onSelectedDeckChanged"
+                            :disabled="session">
                         <option v-for="deck in decks" :value="deck">{{ deck.name }}</option>
                     </select>
                 </div>
@@ -50,7 +51,8 @@
 
             <!-- Start to study button -->
             <div v-if="!session">
-                <button id="start-study-button" class="full-width" :disabled="!canStart" @click="start">Start studying</button>
+                <button id="start-study-button" class="full-width" :disabled="!canStart" @click="start">Start studying
+                </button>
             </div>
         </div>
 
@@ -94,6 +96,7 @@
 
                 // Select the first deck
                 this.selectedDeck = data.decks[0];
+                this.onSelectedDeckChanged();
             });
 
             EventBus.$on('stop', () => this.session = false);
@@ -193,15 +196,17 @@
             },
 
             selectAllCategories () {
-                this.selectedDeck.categories.forEach(category => {
-                    if (this.selectedCategories.indexOf(category.categoryName) < 0) {
-                        this.selectedCategories.push(category.categoryName);
-                    }
-                });
+                this.selectedCategories = this.selectedDeck.categories.map(category => category.categoryName);
             },
 
             deselectAllCategories () {
                 this.selectedCategories.splice(0, this.selectedCategories.length);
+            },
+
+            onSelectedDeckChanged () {
+                if (this.selectedDeck.hasCategories) {
+                    this.selectAllCategories();
+                }
             }
         }
     }

@@ -19,7 +19,7 @@
             <!-- Row with controls -->
             <div class="control-row">
                 <!-- Previous -->
-                <button class="previous" @click="previous" :disabled="!canGoToPrevious">&lt;</button>
+                <button class="previous" @click="previous" :disabled="!canGoToPrevious"><i class="material-icons">arrow_back</i></button>
 
                 <!-- Start center -->
                 <!-- Show answer -->
@@ -34,9 +34,6 @@
                 <button class="center-control" v-if="side == 'rear' && last" @click="end">End
                 </button>
                 <!-- End center -->
-
-                <!-- Next -->
-                <button class="next" @click="next" :disabled="!canGoToNext">&gt;</button>
             </div>
         </div>
         <div v-else class="no-session">
@@ -246,12 +243,20 @@
     }
 
     .control-row button {
-        flex-grow: 1;
         margin-bottom: 8px;
     }
 
+    .previous {
+        flex-basis: 64px;
+        flex-grow: 1;
+    }
+
+    .previous .material-icons {
+        margin-top: 4px;
+    }
+
     .center-control {
+        flex-grow: 3;
         margin-left: 16px;
-        margin-right: 16px;
     }
 </style>
