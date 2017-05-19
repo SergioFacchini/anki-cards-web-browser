@@ -1,6 +1,7 @@
 package com.github.slavetto.gui;
 
 import com.github.slavetto.exporter.AnkiExpectedExportingException;
+import com.github.slavetto.exporter.ExportOptions;
 import com.github.slavetto.exporter.Exporter;
 import com.github.slavetto.gui.viewmodels.DeckWithCardNumber;
 import com.github.slavetto.gui.viewmodels.DecksWithTags;
@@ -34,6 +35,8 @@ public class MainFrame extends JFrame {
     private JCheckBox randomizeCardsPositionsCheckBox;
     private JLabel apkgSelectedStatus;
     private JLabel howManyCardsSelectedForExport;
+    private JTextField cardsAuthorsNames;
+    private JTextField sidebarNotes;
 
     /**
      * It's true if the user has just selected the deck and the calculation of the cards numbers etc.. are taking place.
@@ -122,11 +125,18 @@ public class MainFrame extends JFrame {
             return;
         }
 
+        //Building exporter options
+        ExportOptions exportOptions = new ExportOptions();
+        exportOptions.cardsAuthors = cardsAuthorsNames.getText();
+        exportOptions.sidebarNotes = sidebarNotes.getText();
+        exportOptions.shuffleCards = randomizeCardsPositionsCheckBox.isSelected();
 
+        //Building exporter
         Exporter exporter = new Exporter(
                 currentParser, destinationFolder,
-                getTagsSelectedForExport(), randomizeCardsPositionsCheckBox.isSelected()
+                getTagsSelectedForExport(), exportOptions
         );
+
         try {
             exporter.tryExporting();
 

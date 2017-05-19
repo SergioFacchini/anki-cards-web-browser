@@ -22,7 +22,7 @@ abstract class GeneratedDeck {
         this.deckInfo = deckInfo;
     }
 
-    JSONObject toJSON(boolean randomizeCardsPositions){
+    JSONObject toJSON(ExportOptions options){
         /*
         {
           "name": "Calcolatori",
@@ -50,8 +50,9 @@ abstract class GeneratedDeck {
         JSONObject json = new JSONObject();
         json.put("name", deckInfo.getName());
         json.put("hasCategories", hasCategories());
+        json.put("authors", options.cardsAuthors);
 
-        addCardsToJson(json, randomizeCardsPositions);
+        addCardsToJson(json, options.shuffleCards);
 
         return json;
     }

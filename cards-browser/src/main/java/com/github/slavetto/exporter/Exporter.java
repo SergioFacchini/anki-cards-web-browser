@@ -32,13 +32,13 @@ public class Exporter {
     private final APKGParser parser;
     private final File destinationFolder;
     private final List<DecksWithTags> tagsToExport;
-    private final boolean randomizeCardsPositions;
+    private final ExportOptions options;
 
-    public Exporter(APKGParser parser, File destinationFolder, List<DecksWithTags> tagsToExport, boolean randomizeCardsPositions) {
+    public Exporter(APKGParser parser, File destinationFolder, List<DecksWithTags> tagsToExport, ExportOptions options) {
         this.parser = parser;
         this.destinationFolder = destinationFolder;
         this.tagsToExport = tagsToExport;
-        this.randomizeCardsPositions = randomizeCardsPositions;
+        this.options = options;
     }
 
     public void tryExporting() throws SQLException, IOException, AnkiExpectedExportingException {
@@ -93,7 +93,7 @@ public class Exporter {
         for (DeckInfo deckInfo : parser.getDeckInfos()) {
             GeneratedDeck generatedDeck = generateDeck(deckInfo, parser);
             if(!generatedDeck.isEmpty()) {
-                decksJson.put(generatedDeck.toJSON(randomizeCardsPositions));
+                decksJson.put(generatedDeck.toJSON(options));
             }
         }
         root.put("decks", decksJson);
@@ -107,6 +107,10 @@ public class Exporter {
             cardModelsJson.put(String.valueOf(model.getId()), modelJson);
         }
         root.put("cardTypes", cardModelsJson);
+
+        //credits
+        root.put("sidebarNotes", options.sidebarNotes);
+
         return root;
     }
 

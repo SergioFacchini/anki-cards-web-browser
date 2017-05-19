@@ -58,6 +58,10 @@
                 <button id="start-study-button" class="full-width" :disabled="!canStart" @click="start">Start studying
                 </button>
             </div>
+
+            <!-- Credits, if present -->
+            <p v-if="sidebarNotes" class="credits">{{sidebarNotes}}</p>
+
         </div>
 
         <!-- Show loading message -->
@@ -74,6 +78,7 @@
         data () {
             return {
                 decks: null,
+                sidebarNotes: "",
 
                 // Flag that indicates if the session is running (card are shown in sequence)
                 session: false,
@@ -96,7 +101,8 @@
             EventBus.$on('openSidebar', () => this.openSidebar());
 
             EventBus.$on('downloadCompleted', (data) => {
-                this.decks = data.decks;
+                this.decks   = data.decks;
+                this.sidebarNotes = data.sidebarNotes;
 
                 // Select the first deck
                 this.selectedDeck = data.decks[0];
@@ -324,6 +330,12 @@
         width: 2em;
         height: 2em;
         vertical-align: middle;
+    }
+
+    .credits {
+        text-align: justify;
+        font-style: italic;
+        color: white;
     }
 
     #start-study-button {
