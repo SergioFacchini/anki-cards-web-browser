@@ -23,6 +23,10 @@
                 </div>
             </div>
 
+            <div class="deck-authors" v-if="selectedDeck.authors">
+                Deck created by: {{selectedDeck.authors}}
+            </div>
+
             <!-- Category box -->
             <div v-if="selectedDeck.hasCategories">
                 <h3>Select categories</h3>
@@ -254,6 +258,13 @@
         padding-left: 8px;
         -webkit-appearance: none;
         background-color: white;
+    }
+
+    .deck-authors {
+        font-style: italic;
+        color: white;
+        text-align: center;
+        padding-top: 8px;
     }
 
     .category-list-container {
