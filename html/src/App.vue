@@ -38,7 +38,8 @@
         mounted () {
             // Download decks
             // TODO: Refactor
-            Vue.http.get('decks.json')
+            let rand = Math.random();
+            Vue.http.get('decks.json?_='+rand)
                 .then(response => response.json())
                 .then(data => {
                     // Add properties to the card
