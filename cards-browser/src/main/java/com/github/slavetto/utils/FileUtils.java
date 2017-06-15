@@ -1,7 +1,6 @@
 package com.github.slavetto.utils;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 
@@ -48,5 +47,28 @@ public class FileUtils {
         }
 
         Files.walkFileTree(from.toPath(), new CopyFileVisitor(to.toPath(), options));
+    }
+
+    /**
+     * Write the stream into the specified file
+     * @param from Input stream to which read from
+     * @param to Destination file
+     * @param overwriteExisting Should an existing file be overwritten ?
+     * @throws IOException
+     */
+    public static void writeStreamTo (InputStream from, File to, boolean overwriteExisting) throws IOException {
+        CopyOption[] options;
+        if (overwriteExisting) {
+            options = new CopyOption[]{ StandardCopyOption.REPLACE_EXISTING };
+        } else {
+            options = new CopyOption[0];
+        }
+
+        // Create missing parent directories
+        if (to.getParentFile() != null) {
+            to.getParentFile().mkdirs();
+        }
+
+        Files.copy(from, to.toPath(), options);
     }
 }

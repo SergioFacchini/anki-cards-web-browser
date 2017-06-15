@@ -47,6 +47,9 @@
     import EventBus from '../EventBus';
     import Utils from '../Utils';
 
+    const RIGHT_KEY = 39;
+    const LEFT_KEY = 37;
+
     export default {
         props: ['cardTypes'],
 
@@ -95,6 +98,19 @@
                         this.showCard(card);
                         EventBus.$emit('closeSidebar');
                     }
+                }
+            });
+
+            // Listen to the arrow keys events
+            window.addEventListener('keyup', (evt) => {
+                if (evt.keyCode == RIGHT_KEY) {
+                    if (this.isCardDisplayed && this.side == 'front') {
+                        this.showAnswer();
+                    } else if (this.canGoToNext) {
+                        this.next();
+                    }
+                } else if (evt.keyCode == LEFT_KEY && this.canGoToPrevious) {
+                    this.previous();
                 }
             });
         },
@@ -174,7 +190,7 @@
 
                 // Update the url
                 if (card !== null) {
-                    window.history.replaceState(null, null, "#"+card.id);
+                    window.history.replaceState(null, null, "#" + card.id);
                 }
             },
 

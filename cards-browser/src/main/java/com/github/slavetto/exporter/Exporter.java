@@ -9,10 +9,8 @@ import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import res.Resources;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -49,15 +47,23 @@ public class Exporter {
 
     /**
      * Adds the index and the relative javascript files to the folder.
+     * This method copies the files listed on the 'static-files-list' file. This because when the project is archieved
+     * in a jar, we can't use the resources file as a normal file on the file system but we can only get streams of
+     * the files.
      */
     private void addStaticFiles() throws IOException {
-        URL resourceFolderURL = Resources.class.getResource("data/");
-        try {
-            File resourceFolder = new File(resourceFolderURL.toURI());
-            FileUtils.copyAllRecursively(resourceFolder, destinationFolder, true);
-        } catch (URISyntaxException e) {
-            throw new RuntimeException("Cannot retrieve the folder of the static files!");
+        // Open the file that contains the list of the static files that need to be copied
+        BufferedReader list = new BufferedReader(new InputStreamReader(Exporter.class.getResourceAsStream("/static-files-list")));
+
+        // Copy each file into the destination folder
+        while (list.ready()) {
+            String fileName = list.readLine();
+
+            // Get the stream for the file from the resources
+            InputStream in = Exporter.class.getResourceAsStream("/data" + fileName);
+            FileUtils.writeStreamTo(in, new File(destinationFolder, fileName), true);
         }
+        list.close();
     }
 
     private void moveAndRenameImageFiles() throws AnkiExpectedExportingException {
