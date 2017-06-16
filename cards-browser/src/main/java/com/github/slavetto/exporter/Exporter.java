@@ -11,8 +11,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.*;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -47,13 +45,15 @@ public class Exporter {
 
     /**
      * Adds the index and the relative javascript files to the folder.
-     * This method copies the files listed on the 'static-files-list' file. This because when the project is archieved
+     * This method copies the files listed on the 'static-files-list' file. This because when the project is archived
      * in a jar, we can't use the resources file as a normal file on the file system but we can only get streams of
      * the files.
      */
     private void addStaticFiles() throws IOException {
         // Open the file that contains the list of the static files that need to be copied
-        BufferedReader list = new BufferedReader(new InputStreamReader(Exporter.class.getResourceAsStream("/static-files-list")));
+        BufferedReader list = new BufferedReader(
+                new InputStreamReader(Exporter.class.getResourceAsStream("/static-files-list"))
+        );
 
         // Copy each file into the destination folder
         while (list.ready()) {
